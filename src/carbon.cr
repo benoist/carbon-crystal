@@ -14,4 +14,8 @@ module Carbon
   def self.root
     @@root || raise "Root is not defined"
   end
+
+  def self.logger
+    @@logger ||= Logger.new(STDOUT)
+  end
 end

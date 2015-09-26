@@ -22,11 +22,13 @@ module Carbon
     end
 
     def run
-      server = create_server(nil, 8080)
+      server = create_server("127.0.0.1", 8080)
       server.listen
     end
 
     private def create_server(ip, port)
+      Carbon.logger.info "Listening: http://#{ip}:#{port}"
+
       HTTP::Server.new port, [
                                HTTP::ErrorHandler.new,
                                HTTP::LogHandler.new,

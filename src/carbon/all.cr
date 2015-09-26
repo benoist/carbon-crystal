@@ -1,6 +1,7 @@
 require "../lib/**"
 require "http"
 require "ecr"
+require "logger"
 require "ecr/macros"
 require "../carbon"
 require "../carbon_controller/*"
