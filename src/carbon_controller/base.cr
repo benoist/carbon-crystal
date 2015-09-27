@@ -19,7 +19,8 @@ module CarbonController
     end
 
     def response
-      @_response || HTTP::Response.new(@_status, @_body, @_headers)
+      # @_response || HTTP::Response.new(@_status, @_body, @_headers)
+      {@_status, @_headers, CarbonDispatch::BodyProxy.new(@_body) }
     end
 
     macro render(template = nil, text = nil, json = nil)

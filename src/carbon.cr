@@ -1,4 +1,10 @@
 module Carbon
+  enum Environment
+    Development
+    Test
+    Production
+  end
+
   def self.application=(app)
     @@application = app
   end
@@ -16,6 +22,15 @@ module Carbon
   end
 
   def self.logger
-    @@logger ||= Logger.new(STDOUT)
+    @@logger ||= Logger.new(STDOUT).tap do |logger|
+      logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
+        io <<  message
+      end
+      logger.level = env.development? ? Logger::DEBUG : Logger::INFO
+    end
+  end
+
+  def self.env
+    Environment::Development
   end
 end

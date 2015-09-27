@@ -7,6 +7,30 @@ A framework with Rails in mind.
 
 Just a POC to see how close we can stay
 
+## TODO
+
+- [ ] Middleware
+  - [X] Send file
+  - [X] Static File
+  - [X] Runtime
+  - [X] RequestId
+  - [X] Logger
+  - [ ] Exceptions
+  - [ ] RemoteIP
+  - [ ] Cookies
+  - [ ] Sessions Cookie Store
+  - [ ] Flash
+  - [ ] ParamsParser
+  - [ ] Head
+  - [ ] ConditionalGet
+  - [ ] ETag
+- [ ] Resourceful routing
+- [ ] Action filters
+- [ ] Generators
+- [ ] Asset pipeline
+- [ ] View helpers
+- [ ] Write specs
+
 ## Contributing
 
 1. Fork it ( https://github.com/[your-github-name]/carbon/fork )

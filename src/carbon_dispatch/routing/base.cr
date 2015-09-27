@@ -2,11 +2,15 @@ module CarbonDispatch
   module Routing
     module Base
       macro included
-        def route(request)
-          process_route(request) do |res|
+        def call(env)
+          route(env)
+        end
+
+        def route(env)
+          process_route(env.request) do |res|
             return res
           end
-          raise "no route for #{request.inspect}"
+          raise "no route for #{env.request.inspect}"
         end
 
         def process_route(request, &block)

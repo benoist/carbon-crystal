@@ -2,8 +2,8 @@ class FileString
   def initialize(@string)
   end
 
-  def join(other)
-    File.join(@string, other)
+  def join(*other)
+    FileString.new(File.join(@string, *other))
   end
 
   def to_s

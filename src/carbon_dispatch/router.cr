@@ -1,7 +1,7 @@
 require "./routing/**"
 
 module CarbonDispatch
-  class Router
+  class Router < Middleware
     macro inherited
       include CarbonDispatch::Routing::HttpRequestRouter
     end
