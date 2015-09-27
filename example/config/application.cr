@@ -1,4 +1,4 @@
-require "../../src/carbon/all"
+require "../../src/all"
 
 module ExampleApp
   class Application < Carbon::Application

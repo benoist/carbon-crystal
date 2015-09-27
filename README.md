@@ -9,6 +9,7 @@ Just a POC to see how close we can stay
 
 ## TODO
 
+- [ ] Notifications (ActiveSupport like)
 - [ ] Middleware
   - [X] Send file
   - [X] Static File
