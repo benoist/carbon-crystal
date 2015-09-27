@@ -46,6 +46,8 @@ module CarbonDispatch
       end
 
       macro append_route(pattern, mapping, options)
+        create_view({{pattern}}, {{mapping}})
+
         def process_route(request)
           previous_def do |res|
             yield res

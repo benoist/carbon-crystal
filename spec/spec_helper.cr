@@ -1,2 +1,3 @@
 require "spec"
-require "../src/carbon"
+require "../src/all"
+require "./support/*"

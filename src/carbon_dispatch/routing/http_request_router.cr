@@ -21,7 +21,7 @@ module CarbonDispatch
         controller.response
       end
 
-      macro get(pattern, mapping)
+      macro create_view(pattern, mapping)
         {% receiver_and_message = mapping.split '#' %}
         {% receiver = receiver_and_message[0] %}
         {% message = receiver_and_message[1] %}
@@ -29,7 +29,9 @@ module CarbonDispatch
         class ::Views::{{receiver.id.capitalize}}::{{message.id.capitalize}} < CarbonView::Base
           ecr_file "app/views/{{receiver.id}}/{{message.id}}.html.ecr"
         end
+      end
 
+      macro get(pattern, mapping)
         append_route({{pattern}}, {{mapping}}, {via: "GET"})
       end
 
