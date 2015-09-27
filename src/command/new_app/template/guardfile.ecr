@@ -1,10 +1,10 @@
 guard 'process', :name => 'Spec', :command => 'crystal spec'  do
-  watch(/spec\/(.*).cr$/)
-  watch(/src\/(.*).cr$/)
+  watch(/spec\/(.*).e?cr$/)
+  watch(/app\/(.*).e?cr$/)
 end
 
 guard 'process', :name => 'Build', :command => 'crystal build server.cr' do
-  watch(/src\/(.*).cr$/)
+  watch(/app\/(.*).e?cr$/)
 end
 
 guard 'process', :name => 'Server', :command => './server' do
