@@ -7,4 +7,4 @@ authors:
 license: MIT
 
 scripts:
-  postinstall: crystal build src/carbon/command -o ./carbon
+  postinstall: scripts/build_command
