@@ -72,7 +72,7 @@ module Carbon
         template RoutesView, "routes.cr.ecr", "config/routes.cr"
         template RobotsView, "robots.txt.ecr", "public/robots.txt"
         template ShardView, "shard.yml.ecr", "shard.yml"
-        template GuardfileView, "guardfile.yml.ecr", "Guardfile"
+        template GuardfileView, "guardfile.ecr", "Guardfile"
 
         empty_file "public/favicon.ico"
         empty_file "log/.gitkeep"
