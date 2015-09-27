@@ -7,4 +7,4 @@ authors:
 license: MIT
 
 scripts:
-  postinstall: if ![ -f "./carbon" ]; then ; crystal build command.cr -o ./carbon ; fi
+  postinstall: crystal build command.cr -o ./carbon
