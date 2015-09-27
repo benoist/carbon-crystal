@@ -6,5 +6,3 @@ authors:
 
 license: MIT
 
-scripts:
-  postinstall: crystal build command.cr -o ./carbon
