@@ -1,9 +1,9 @@
-#! /usr/bin/bash
+#!/bin/bash
 
 file="../carbon"
 if [ -f "$file" ]
 then
     echo "Carbon installed correctly"
 else
-    crystal build libs/carbon/command.cr -o ../../carbon
+    crystal build libs/carbon/command.cr -o ./carbon
 fi
