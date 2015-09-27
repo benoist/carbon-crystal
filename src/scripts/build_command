@@ -5,6 +5,5 @@ if [ -f "$file" ]
 then
     echo "Carbon installed correctly"
 else
-    #crystal build libs/carbon/command.cr -o ./carbon
-    pwd
+    crystal build src/command.cr -o ./carbon
 fi
