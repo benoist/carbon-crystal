@@ -5,3 +5,6 @@ authors:
   - Benoist Claassen <benoist.claassen@gmail.com>
 
 license: MIT
+
+scripts:
+  postinstall: crystal build src/carbon/command -o ./carbon
