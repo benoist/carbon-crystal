@@ -1,6 +1,12 @@
 require "json"
 
 module CarbonController
+  class RenderTemplateEvent < CarbonSupport::Notifications::Event
+    def message
+      "#{@message} in #{duration_text}"
+    end
+  end
+
   class Base
     macro inherited
       include CarbonDispatch::Routing::Routable
@@ -25,20 +31,26 @@ module CarbonController
 
     macro render(template = nil, text = nil, json = nil)
       {% if template %}
-        @_body = ::Views::Application::{{template.id.capitalize}}.new(controller=self).to_s
+        CarbonSupport::Notifier.instance.instrument(CarbonController::RenderTemplateEvent.new("Rendering template {{template.id}}")) do
+          @_body = ::Views::Application::{{template.id.capitalize}}.new(controller=self).to_s
+        end
         @_headers["Content-Type"] = "text/html"
         return
       {% end %}
 
       {% if text %}
-        @_body = {{text}}
+        CarbonSupport::Notifier.instance.instrument(CarbonSupport::Notifications::Event.new("Rendering text")) do
+          @_body = {{text}}
+        end
         @_headers["Content-Type"] = "text/plain"
         return
       {% end %}
 
       {% if json %}
         @_headers["Content-Type"] = "application/json"
-        @_body = {{json}}.to_json
+        CarbonSupport::Notifier.instance.instrument(CarbonSupport::Notifications::Event.new("Rendering json")) do
+          @_body = {{json}}.to_json
+        end
         return
       {% end %}
     end

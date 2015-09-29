@@ -1,4 +1,8 @@
 module CarbonDispatch
+  class DispatchEvent < CarbonSupport::Notifications::Event
+
+  end
+
   class Logger < CarbonSupport::Subscriber
     include Middleware
 
@@ -8,13 +12,21 @@ module CarbonDispatch
     end
 
     def start(event : CarbonSupport::Notifications::Event)
-      logger.info event.message
+      case event
+        when CarbonDispatch::RouteEvent, CarbonDispatch::DispatchEvent
+          logger.info event.message
+        else
+      end
     end
 
     def finish(event : CarbonSupport::Notifications::Event)
-      case event.object
-        when Environment
+      case event
+        when CarbonDispatch::DispatchEvent
           logger.info "Completed in #{event.duration_text}"
+        when CarbonDispatch::RouteEvent
+          logger.info "Processed in #{event.duration_text}"
+        else
+          logger.info event.message
       end
     end
 
@@ -27,7 +39,7 @@ module CarbonDispatch
       end
 
       instrumenter = CarbonSupport::Notifier.instrumenter
-      instrumenter.start CarbonSupport::Notifications::Event.new(started_request_message(env))
+      instrumenter.start CarbonDispatch::DispatchEvent.new(started_request_message(env))
       status, headers, body = app.call(env)
 
       body = BodyProxy.new(body) { instrument_finish(env) }
@@ -49,7 +61,7 @@ module CarbonDispatch
 
     def instrument_finish(env)
       instrumenter = CarbonSupport::Notifier.instrumenter
-      instrumenter.finish(CarbonSupport::Notifications::Event.new(env))
+      instrumenter.finish(CarbonDispatch::DispatchEvent.new(env))
     end
 
     def logger
