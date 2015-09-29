@@ -6,6 +6,10 @@ module CarbonSupport
     getter subscribers
     INSTANCE = new
 
+    def self.instrumenter
+      instance
+    end
+
     def self.instance
       INSTANCE
     end
@@ -20,6 +24,14 @@ module CarbonSupport
 
     def unsubscribe(subscriber)
       @subscribers.try &.delete(subscriber)
+    end
+
+    def start(event)
+      @subscribers.try &.each &.receive_start event
+    end
+
+    def finish(event)
+      @subscribers.try &.each &.receive_finish event
     end
 
     def instrument(event)

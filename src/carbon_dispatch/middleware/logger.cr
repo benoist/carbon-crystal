@@ -1,5 +1,23 @@
 module CarbonDispatch
-  class Logger < Middleware
+  class Logger < CarbonSupport::Subscriber
+    include Middleware
+
+    def initialize
+      super
+      CarbonSupport::Notifier.instance.subscribe(self)
+    end
+
+    def start(event : CarbonSupport::Notifications::Event)
+      logger.info event.message
+    end
+
+    def finish(event : CarbonSupport::Notifications::Event)
+      case event.object
+        when Environment
+          logger.info "Completed in #{event.duration_text}"
+      end
+    end
+
     def call(env)
       @start = Time.now
 
@@ -8,14 +26,15 @@ module CarbonDispatch
         logger.debug ""
       end
 
-      logger.info started_request_message(env)
-      status, headers, body = @app.call(env)
+      instrumenter = CarbonSupport::Notifier.instrumenter
+      instrumenter.start CarbonSupport::Notifications::Event.new(started_request_message(env))
+      status, headers, body = app.call(env)
 
-      body = BodyProxy.new(body) { logger.info finish(env) }
+      body = BodyProxy.new(body) { instrument_finish(env) }
 
       {status, headers, body}
     rescue e : Exception
-      logger.info finish(env)
+      instrument_finish(env)
       raise e
     end
 
@@ -28,30 +47,13 @@ module CarbonDispatch
           Time.now.to_s]
     end
 
-    def finish(env)
-      start = @start
-      if start
-        elapsed = Time.now - start
-        elapsed_text = elapsed_text(elapsed)
-        "Completed in #{elapsed_text}"
-      end
+    def instrument_finish(env)
+      instrumenter = CarbonSupport::Notifier.instrumenter
+      instrumenter.finish(CarbonSupport::Notifications::Event.new(env))
     end
 
     def logger
       Carbon.logger
-    end
-
-    private def elapsed_text(elapsed)
-      minutes = elapsed.total_minutes
-      return "#{minutes.round(2)}m" if minutes >= 1
-
-      seconds = elapsed.total_seconds
-      return "#{seconds.round(2)}s" if seconds >= 1
-
-      millis = elapsed.total_milliseconds
-      return "#{millis.round(2)}ms" if millis >= 1
-
-      "#{(millis * 1000).round(2)}µs"
     end
   end
 end

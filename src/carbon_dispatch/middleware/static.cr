@@ -1,5 +1,6 @@
 module CarbonDispatch
-  class Static < Middleware
+  class Static
+    include Middleware
     def call(env)
       case env.request.method
         when "GET", "HEAD"
@@ -9,7 +10,7 @@ module CarbonDispatch
           end
       end
 
-      @app.call(env)
+      app.call(env)
     end
 
     private def mime_type(path)

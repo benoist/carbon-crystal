@@ -1,16 +1,16 @@
 module CarbonDispatch
-  abstract class Middleware
-    def initialize
-      @app = self
-    end
-
+  module Middleware
     def call(request : Environment) : Tuple(Int32, HTTP::Headers, BodyProxy)
-      @app.call(request)
+      app.call(request)
     end
 
     def build(app)
       @app = app
       self
+    end
+
+    def app
+      @app || raise "App not defined"
     end
   end
 

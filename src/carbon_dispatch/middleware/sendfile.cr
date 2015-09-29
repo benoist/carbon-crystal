@@ -1,11 +1,12 @@
 module CarbonDispatch
-  class Sendfile < Middleware
+  class Sendfile
+    include Middleware
     def initialize(@variation)
       super()
     end
 
     def call(env)
-      status, headers, body = @app.call(env)
+      status, headers, body = app.call(env)
 
       if body.is_path?
         case type = variation(env)
