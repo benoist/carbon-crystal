@@ -14,5 +14,6 @@ guard 'process', :name => 'Server', :command => './server', dir: "example" do
 end
 
 guard 'process', :name => 'Worksheet', :command => 'crystal run worksheet.cr' do
+  watch(/src\/(.*).cr$/)
   watch('worksheet.cr')
 end
