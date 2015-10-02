@@ -8,26 +8,26 @@ module CarbonDispatch
 
     def initialize
       super
-      CarbonSupport::Notifier.instance.subscribe(self)
+      # CarbonSupport::Notifier.instance.subscribe(self)
     end
 
     def start(event : CarbonSupport::Notifications::Event)
-      case event
-        when CarbonDispatch::RouteEvent, CarbonDispatch::DispatchEvent
+      # case event
+        # when CarbonDispatch::RouteEvent, CarbonDispatch::DispatchEvent
           logger.info event.message
-        else
-      end
+        # else
+      # end
     end
 
     def finish(event : CarbonSupport::Notifications::Event)
-      case event
-        when CarbonDispatch::DispatchEvent
-          logger.info "Completed in #{event.duration_text}"
-        when CarbonDispatch::RouteEvent
-          logger.info "Processed in #{event.duration_text}"
-        else
+      # case event
+        # when CarbonDispatch::DispatchEvent
+        #   logger.info "Completed in #{event.duration_text}"
+        # when CarbonDispatch::RouteEvent
+        #   logger.info "Processed in #{event.duration_text}"
+        # else
           logger.info event.message
-      end
+      # end
     end
 
     def call(env)
@@ -38,8 +38,8 @@ module CarbonDispatch
         logger.debug ""
       end
 
-      instrumenter = CarbonSupport::Notifier.instrumenter
-      instrumenter.start CarbonDispatch::DispatchEvent.new(started_request_message(env))
+      # instrumenter = CarbonSupport::Notifier.instrumenter
+      # instrumenter.start CarbonDispatch::DispatchEvent.new(started_request_message(env))
       status, headers, body = app.call(env)
 
       body = BodyProxy.new(body) { instrument_finish(env) }
@@ -60,8 +60,8 @@ module CarbonDispatch
     end
 
     def instrument_finish(env)
-      instrumenter = CarbonSupport::Notifier.instrumenter
-      instrumenter.finish(CarbonDispatch::DispatchEvent.new(env))
+      # instrumenter = CarbonSupport::Notifier.instrumenter
+      # instrumenter.finish(CarbonDispatch::DispatchEvent.new(env))
     end
 
     def logger

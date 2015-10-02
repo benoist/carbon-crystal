@@ -31,26 +31,26 @@ module CarbonController
 
     macro render(template = nil, text = nil, json = nil)
       {% if template %}
-        CarbonSupport::Notifier.instance.instrument(CarbonController::RenderTemplateEvent.new("Rendering template {{template.id}}")) do
+        # CarbonSupport::Notifier.instance.instrument(CarbonController::RenderTemplateEvent.new("Rendering template {{template.id}}")) do
           @_body = ::Views::Application::{{template.id.capitalize}}.new(controller=self).to_s
-        end
+        # end
         @_headers["Content-Type"] = "text/html"
         return
       {% end %}
 
       {% if text %}
-        CarbonSupport::Notifier.instance.instrument(CarbonSupport::Notifications::Event.new("Rendering text")) do
+        # CarbonSupport::Notifier.instance.instrument(CarbonSupport::Notifications::Event.new("Rendering text")) do
           @_body = {{text}}
-        end
+        # end
         @_headers["Content-Type"] = "text/plain"
         return
       {% end %}
 
       {% if json %}
         @_headers["Content-Type"] = "application/json"
-        CarbonSupport::Notifier.instance.instrument(CarbonSupport::Notifications::Event.new("Rendering json")) do
+        # CarbonSupport::Notifier.instance.instrument(CarbonSupport::Notifications::Event.new("Rendering json")) do
           @_body = {{json}}.to_json
-        end
+        # end
         return
       {% end %}
     end

@@ -1,27 +1,37 @@
 module CarbonSupport
   module Notifications
     class Event
+      property :name
       property :start
-      property :finish
+      property :end
       property :message
+      property :children
+      property :payload
       property :object
 
-      def initialize
-
-      end
-
-      def initialize(@object)
-
-      end
-
-      def initialize(@message : String)
+      def initialize(name, start, ending, transaction_id, payload)
+        @name           = name
+        @payload        = payload
+        @time           = start
+        @transaction_id = transaction_id
+        @end            = ending
+        @children       = [] of Event
+        @duration       = nil
       end
 
       def duration
-        start = @start || Time.now
+        start  = @start || Time.now
         finish = @finish || Time.now
 
         finish - start
+      end
+
+      def <<(event)
+        @children << event
+      end
+
+      def parent_of?(event)
+        @children.include? event
       end
 
       def duration_text

@@ -9,3 +9,4 @@ example/server
 /shard.lock
 /worksheet.cr
 carbon
+.idea/
