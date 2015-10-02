@@ -1,7 +1,5 @@
-class ExampleApp::Router < CarbonDispatch::Router
-  get "new", "application#new"
-  get "", "application#index"
+class Router < CarbonDispatch::Router
+  get "/new", controller: "application", action: "new"
+  get "/", controller: "application", action: "index"
 end
-
-Carbon.application.router = ExampleApp::Router.new
 

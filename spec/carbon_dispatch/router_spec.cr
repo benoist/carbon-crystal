@@ -1,12 +1,26 @@
 require "../spec_helper"
 
 module CarbonDispatchTest
-  class TestRouter < CarbonDispatch::Router
-    get "new", "application#new"
-    get "", "application#index"
+  class TestController < CarbonController::Base
+    def index
+
+    end
+
+    def new
+
+    end
   end
 
-  describe TestRouter do
+  class Router < CarbonDispatch::Router
+    get "/new", controller: "test", action: "new"
+    get "/", controller: "test", action: "index"
+  end
 
+  describe CarbonDispatch::Router do
+    it "creates a router" do
+      router = Router.new(Router.routes.dup)
+
+      puts router.inspect
+    end
   end
 end

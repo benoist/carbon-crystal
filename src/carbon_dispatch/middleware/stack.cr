@@ -1,6 +1,6 @@
 module CarbonDispatch
   module Middleware
-    def call(request : Environment) : Tuple(Int32, HTTP::Headers, BodyProxy)
+    def call(request : Request, response : Response)
       app.call(request)
     end
 
@@ -38,7 +38,7 @@ module CarbonDispatch
     end
 
     def to_s(io : IO)
-      msg = "\n"
+      msg = super
       @middleware.each do |mdware|
         msg += "use #{mdware}\n"
       end
