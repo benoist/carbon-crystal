@@ -1,14 +1,14 @@
 require "./base"
 
 module CarbonDispatch
-  # class RouteEvent < CarbonSupport::Notifications::Event
-  #   def initialize(@controller, @action)
-  #   end
-  #
-  #   def message
-  #     "Processing by #{@controller}##{@action} as html"
-  #   end
-  # end
+  class RouteEvent < CarbonSupport::Notifications::Event
+    def initialize(@controller, @action)
+    end
+
+    def message
+      "Processing by #{@controller}##{@action} as html"
+    end
+  end
 
   module Routing
     module HttpRequestRouter
@@ -26,9 +26,9 @@ module CarbonDispatch
         {% message = receiver_and_message[1] %}
 
         controller = with_context({{receiver.id.capitalize}}Controller.new(request))
-        # CarbonSupport::Notifier.instance.instrument(CarbonDispatch::RouteEvent.new("{{receiver.id.capitalize}}", "{{message.id}}")) do
+        CarbonSupport::Notifier.instance.instrument(CarbonDispatch::RouteEvent.new("{{receiver.id.capitalize}}", "{{message.id}}")) do
           controller.{{message.id}}
-        # end
+        end
         controller.response
       end
 

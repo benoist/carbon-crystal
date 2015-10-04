@@ -3,8 +3,12 @@ require "./application"
 
 Carbon.root = File.expand_path("../", File.dirname(__FILE__))
 
-require "./routes"
 require "../app/**"
+
+require "./routes"
 
 # Initialize the Carbon application.
 Carbon.application.initialize!
+
+#
+# puts CarbonView::Base.views.inspect

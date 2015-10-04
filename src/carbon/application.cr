@@ -2,7 +2,7 @@ module Carbon
   class Application
     macro inherited
       Carbon.application = {{@type}}.new
-      end
+    end
 
     macro config
       Carbon.application
@@ -20,6 +20,10 @@ module Carbon
       @handler = CarbonDispatch::Handler.new(app)
     end
 
+    def routes
+      CarbonDispatch::Router
+    end
+
     def router=(router)
       @router = router
     end
@@ -33,7 +37,7 @@ module Carbon
     end
 
     def run
-      server = create_server("127.0.0.1", 8080)
+      server = create_server("127.0.0.1", 3000)
       server.listen
     end
 
@@ -46,11 +50,11 @@ module Carbon
     end
 
     private def set_default_middleware
-      middleware.use CarbonDispatch::Sendfile.new "X-Accel-Redirect"
-      middleware.use CarbonDispatch::Static.new
-      middleware.use CarbonDispatch::Runtime.new
-      middleware.use CarbonDispatch::RequestId.new
-      middleware.use CarbonDispatch::Logger.new
+      # middleware.use CarbonDispatch::Sendfile.new "X-Accel-Redirect"
+      # middleware.use CarbonDispatch::Static.new
+      # middleware.use CarbonDispatch::Runtime.new
+      # middleware.use CarbonDispatch::RequestId.new
+      # middleware.use CarbonDispatch::Logger.new
     end
   end
 end

@@ -2,10 +2,10 @@ class ApplicationController < CarbonController::Base
   def index
     @test = "test"
 
-    render template: "index"
+    render_template "index"
   end
 
   def new
-    render json: ["new"]
+    render_json ["new"]
   end
 end
