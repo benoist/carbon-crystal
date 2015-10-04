@@ -1,29 +1,28 @@
-require "../spec_helper"
-
+# require "../spec_helper"
+#
 module CarbonSupportTest
-  include CarbonSupport::Notifications
+  # include CarbonSupport::Notifications
 
   class TestSubscriber < CarbonSupport::Subscriber
 
     def self.events
-      @@events ||= [] of Event
+      @@events ||= [] of CarbonSupport::Notifications::Event
     end
 
     def self.clear
-      @@events = [] of Event
+      @@events = [] of CarbonSupport::Notifications::Event
     end
 
     def open_party(event)
-      events << event
+      self.class.events << event
     end
 
     private def private_party(event)
-      events << event
+      self.class.events << event
     end
 
     attach_to :doodle
   end
-
   describe CarbonSupport::Subscriber do
 
     it "attaches subscribers" do
@@ -40,7 +39,6 @@ module CarbonSupportTest
 
     it "does not attach private methdos" do
       TestSubscriber.clear
-      CarbonSupport::Notifications.instrument("open_party.doodle")
       CarbonSupport::Notifications.instrument("private_party.doodle")
 
       TestSubscriber.events.empty?.should be_truthy

@@ -11,8 +11,8 @@ module CarbonSupport
       @@notifier ||= Fanout.new
     end
 
-    def self.publish(name, *args)
-      notifier.publish(name, *args)
+    def self.publish(name, started, finish, id, payload)
+      notifier.publish(name, started, finish, id, payload)
     end
 
     def self.instrument(name, payload = Payload.new)
@@ -29,16 +29,20 @@ module CarbonSupport
       end
     end
 
-    def self.subscribe(*args)
-      notifier.subscribe(*args)
+    def self.subscribe(pattern, subscriber : Subscriber)
+      notifier.subscribe(pattern, subscriber)
     end
 
-    def self.subscribe(*args, &block)
-      notifier.subscribe(*args, block)
+    def self.subscribe(pattern, callback : CarbonSupport::Notifications::Event -> )
+      notifier.subscribe(pattern, callback)
     end
 
-    def self.subscribed(callback, *args, &block)
-      subscriber = subscribe(*args, &callback)
+    def self.subscribe(pattern, &block)
+      notifier.subscribe(pattern, block)
+    end
+
+    def self.subscribed(callback, name, &block)
+      subscriber = subscribe(name, callback)
       yield
     ensure
       unsubscribe(subscriber)

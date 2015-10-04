@@ -1,49 +1,14 @@
-# require "../carbon_support/notifications/event"
-
-# module CarbonSupport
-#   class Subscriber
-#     def initialize
-#       @timestack = Hash(Fiber, Array(Time)).new { |h,k| h[k] = [] of Time }
-#     end
-#
-#     def initialize(&@block : CarbonSupport::Notifications::Event -> Void)
-#       @timestack = Hash(Fiber, Array(Time)).new { |h,k| h[k] = [] of Time }
-#     end
-#
-#     def start(event : CarbonSupport::Notifications::Event)
-#     end
-#
-#     def receive_start(event : CarbonSupport::Notifications::Event)
-#       @timestack[Fiber.current] << Time.now
-#       start(event)
-#     end
-#
-#     def finish(event : CarbonSupport::Notifications::Event)
-#     end
-#
-#     def receive_finish(event : CarbonSupport::Notifications::Event)
-#       event.start = @timestack[Fiber.current].pop
-#       @timestack.delete(Fiber.current) if @timestack[Fiber.current].size == 0
-#       event.finish = Time.now
-#
-#       finish(event)
-#       @block.try &.call(event)
-#     end
-#   end
-# end
-# require 'active_support/per_thread_registry'
-
 module CarbonSupport
   class Subscriber
-    macro attach_to(namespace, subscriber = new, notifier=CarbonSupport::Notifications)
+    macro attach_to(namespace, subscriber = {{@type}}.new, notifier=CarbonSupport::Notifications)
       @@namespace  = {{namespace}}
       @@subscriber = {{subscriber}}
       @@notifier   = {{notifier}}
 
-      subscribers << @@subscriber
-
       {% for event in @type.methods %}
-        add_event_subscriber({{event.name}})
+        {% if {{event.visibility}} == :public %}
+          add_event_subscriber({{event.name}})
+        {% end %}
       {% end %}
     end
 
@@ -57,19 +22,16 @@ module CarbonSupport
       end
     end
 
-    def self.subscribers
-      @@subscribers ||= [] of Subscriber
-    end
-
     macro add_event_subscriber(event)
       unless ["start", "finish"].includes?("{{event}}")
         pattern = "{{event}}.#{@@namespace}"
 
         # don't add multiple subscribers (eg. if methods are redefined)
-        # unless @@subscriber.patterns.includes?(pattern)
-          @@subscriber.patterns.try &.:<<(pattern)
+        unless @@subscriber.patterns.includes?(pattern)
+          @@subscriber.patterns << pattern
+          @@subscriber.callers[pattern] = ->(event : CarbonSupport::Notifications::Event) { @@subscriber.{{event}}(event); nil }
           @@notifier.subscribe(pattern, @@subscriber)
-        # end
+        end
       end
     end
 
@@ -80,10 +42,17 @@ module CarbonSupport
       @patterns  = [] of String
     end
 
+    def callers
+      @callers ||= {} of String => Proc(CarbonSupport::Notifications::Event, Nil)
+    end
+
     def start(name, id, payload)
-      e = CarbonSupport::Notifications::Event.new(name, Time.now, nil, id, payload)
-      parent = event_stack.last
-      parent << e if parent
+      e = CarbonSupport::Notifications::Event.new(name, Time.now, Time.now, id, payload)
+
+      if event_stack.any?
+        parent = event_stack.last
+        parent << e
+      end
 
       event_stack.push e
     end
@@ -94,12 +63,11 @@ module CarbonSupport
       event.end = finished
       event.payload = payload
 
-      method = name.split('.').first
-      # send(method, event)
+      callers[name].call(event) if callers.has_key?(name)
     end
 
-    def call(name, started, ended, id, payload)
-
+    def call(event : CarbonSupport::Notifications::Event)
+      raise "subscribers cannot respond to all messages"
     end
 
     private def event_stack

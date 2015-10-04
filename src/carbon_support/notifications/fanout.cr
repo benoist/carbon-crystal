@@ -7,7 +7,18 @@ module CarbonSupport
         super
       end
 
-      def subscribe(pattern = nil, block = Proc.new)
+      def subscribe(pattern, subscriber : Subscriber)
+        subscriber = Subscribers.new pattern, subscriber
+        @subscribers << subscriber
+        @listeners_for.clear
+        subscriber
+      end
+
+      def subscribe(pattern = nil, &block : CarbonSupport::Notifications::Event ->)
+        subscribe(pattern, block)
+      end
+
+      def subscribe(pattern, block : CarbonSupport::Notifications::Event ->)
         subscriber = Subscribers.new pattern, block
         @subscribers << subscriber
         @listeners_for.clear
@@ -33,8 +44,8 @@ module CarbonSupport
         listeners_for(name).each { |s| s.finish(name, id, payload) }
       end
 
-      def publish(name, *args)
-        listeners_for(name).each { |s| s.publish(name, *args) }
+      def publish(name, started, finish, id, payload)
+        listeners_for(name).each { |s| s.publish(name, started, finish, id, payload) }
       end
 
       def listeners_for(name)
@@ -56,6 +67,7 @@ module CarbonSupport
           elsif listener.responds_to?(:call)
             Timed.new pattern, listener
           else
+            puts listener
             raise "Invalid listener"
           end
         end
@@ -71,22 +83,23 @@ module CarbonSupport
             @can_publish = delegate.responds_to?(:publish)
           end
 
-          def publish(name, *args)
-            if @can_publish
-              @delegate.publish name, *args
-            end
+          def publish(name, started, finish, id, payload)
+            delegate = @delegate
+            delegate.publish(name, started, finish, id, payload) if delegate.responds_to?(:publish)
           end
 
           def start(name, id, payload)
-            @delegate.start name, id, payload
+            delegate = @delegate
+            delegate.start name, id, payload if delegate.responds_to?(:start)
           end
 
           def finish(name, id, payload)
-            @delegate.finish name, id, payload
+            delegate = @delegate
+            delegate.finish name, id, payload if delegate.responds_to?(:finish)
           end
 
           def subscribed_to?(name)
-            @pattern === name
+            @pattern === name || @pattern == nil
           end
 
           def matches?(name)
@@ -95,8 +108,8 @@ module CarbonSupport
         end
 
         class Timed < Evented
-          def publish(name, *args)
-            @delegate.call name, *args
+          def publish(name, started, finish, id, payload)
+            @delegate.call CarbonSupport::Notifications::Event.new(name, started, Time.now, id, payload)
           end
 
           def start(name, id, payload)
@@ -105,7 +118,7 @@ module CarbonSupport
 
           def finish(name, id, payload)
             started = self.class.timestack[Fiber.current].pop
-            @delegate.call(name, started, Time.now, id, payload)
+            @delegate.call CarbonSupport::Notifications::Event.new(name, started, Time.now, id, payload)
           end
         end
       end

@@ -20,7 +20,7 @@ module CarbonDispatchTest
     it "creates a router" do
       router = Router.new(Router.routes.dup)
 
-      puts router.inspect
+      # puts router.inspect
     end
   end
 end

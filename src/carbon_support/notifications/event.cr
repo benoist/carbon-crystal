@@ -4,15 +4,15 @@ module CarbonSupport
       property :name
       property :start
       property :end
-      property :message
+      property :transaction_id
       property :children
       property :payload
       property :object
 
-      def initialize(name, start, ending, transaction_id, payload)
+      def initialize(name : String, start : Time, ending : Time, transaction_id : String, payload : Payload)
         @name           = name
         @payload        = payload
-        @time           = start
+        @start          = start
         @transaction_id = transaction_id
         @end            = ending
         @children       = [] of Event
@@ -26,11 +26,11 @@ module CarbonSupport
         finish - start
       end
 
-      def <<(event)
+      def <<(event : Event)
         @children << event
       end
 
-      def parent_of?(event)
+      def parent_of?(event : Event)
         @children.include? event
       end
 
@@ -45,6 +45,14 @@ module CarbonSupport
         return "#{millis.round(2)}ms" if millis >= 1
 
         "#{(millis * 1000).round(2)}µs"
+      end
+
+      def ==(other)
+        name == other.name &&
+            payload == other.payload &&
+            start == other.start &&
+            self.end == other.end &&
+            transaction_id == other.transaction_id
       end
     end
   end
