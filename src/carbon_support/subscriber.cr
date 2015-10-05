@@ -71,22 +71,7 @@ module CarbonSupport
     end
 
     private def event_stack
-      @event_stack ||= [] of CarbonSupport::Notifications::Event#SubscriberQueueRegistry::INSTANCE.get_queue(@queue_key.to_s)
-    end
-  end
-
-  # This is a registry for all the event stacks kept for subscribers.
-  #
-  # See the documentation of <tt>ActiveSupport::PerThreadRegistry</tt>
-  # for further details.
-  class SubscriberQueueRegistry # :nodoc:
-    INSTANCE = new
-    def initialize
-      @registry = Hash(String, Array(CarbonSupport::Notifications::Event)).new { |h,k| h[k] = [] of CarbonSupport::Notifications::Event }
-    end
-
-    def get_queue(queue_key)
-      @registry[queue_key]
+      @event_stack ||= [] of CarbonSupport::Notifications::Event
     end
   end
 end

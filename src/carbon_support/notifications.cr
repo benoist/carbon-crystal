@@ -7,6 +7,10 @@ require "./subscriber"
 module CarbonSupport
   module Notifications
 
+    def self.notifier=(notifier)
+      @@notifier = notifier
+    end
+
     def self.notifier
       @@notifier ||= Fanout.new
     end
@@ -17,9 +21,9 @@ module CarbonSupport
 
     def self.instrument(name, payload = Payload.new)
       if notifier.listening?(name)
-        instrumenter.instrument(name, payload) { yield payload if block_given? }
+        instrumenter.instrument(name, payload) { yield payload }
       else
-        yield payload if block_given?
+        yield payload
       end
     end
 
