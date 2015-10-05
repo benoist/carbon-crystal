@@ -10,5 +10,3 @@ require "./routes"
 # Initialize the Carbon application.
 Carbon.application.initialize!
 
-#
-# puts CarbonView::Base.views.inspect

@@ -54,7 +54,7 @@ module Carbon
       # middleware.use CarbonDispatch::Static.new
       # middleware.use CarbonDispatch::Runtime.new
       # middleware.use CarbonDispatch::RequestId.new
-      # middleware.use CarbonDispatch::Logger.new
+      middleware.use CarbonDispatch::Logger.new
     end
   end
 end
