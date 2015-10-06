@@ -29,7 +29,7 @@ module CarbonSupport
         # don't add multiple subscribers (eg. if methods are redefined)
         unless @@subscriber.patterns.includes?(pattern)
           @@subscriber.patterns << pattern
-          @@subscriber.callers[pattern] = ->(event : CarbonSupport::Notifications::Event) { @@subscriber.{{event}}(event); nil }
+          @@subscriber.callers[pattern] = ->(e : CarbonSupport::Notifications::Event) { @@subscriber.{{event}}(e) }
           @@notifier.subscribe(pattern, @@subscriber)
         end
       end
@@ -43,7 +43,7 @@ module CarbonSupport
     end
 
     def callers
-      @callers ||= {} of String => Proc(CarbonSupport::Notifications::Event, Nil)
+      @callers ||= {} of String => CarbonSupport::Notifications::Event->
     end
 
     def start(name, id, payload)

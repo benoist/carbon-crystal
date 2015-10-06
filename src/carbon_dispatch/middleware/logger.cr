@@ -1,8 +1,4 @@
 module CarbonDispatch
-  class DispatchEvent < CarbonSupport::Notifications::Event
-
-  end
-
   class Logger < CarbonSupport::LogSubscriber
     include Middleware
 

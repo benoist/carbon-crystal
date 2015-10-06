@@ -1,15 +1,6 @@
 require "./base"
 
 module CarbonDispatch
-  class RouteEvent < CarbonSupport::Notifications::Event
-    def initialize(@controller, @action)
-    end
-
-    def message
-      "Processing by #{@controller}##{@action} as html"
-    end
-  end
-
   module Routing
     module HttpRequestRouter
       macro included

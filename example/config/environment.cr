@@ -9,4 +9,3 @@ require "./routes"
 
 # Initialize the Carbon application.
 Carbon.application.initialize!
-

@@ -1,4 +1,4 @@
-require "./instrumentation"
+require "./metal/*"
 module CarbonController
   class Metal < Abstract
     include CarbonController::Instrumentation
@@ -6,21 +6,19 @@ module CarbonController
     macro action(name, request, response)
       proc = ->(controller : {{@type}}) { controller.{{name.id}} }
 
-      {{@type}}.new.dispatch({{name}}, {{request}}, {{response}}, proc)
+      {{@type}}.new({{request}}, {{response}}).dispatch({{name}}, proc)
     end
 
-    def initialize
+    def initialize(request, response)
       @_headers  = { "Content-Type" => "text/html" }
       @_status   = 200
-      @_request  = nil
-      @_response = CarbonDispatch::Response.new
-      @_routes   = nil
-      super
-    end
-
-    def dispatch(action, request, response, block)
       @_request  = request
       @_response = response
+      @_routes   = nil
+      super()
+    end
+
+    def dispatch(action, block)
       process(action, block)
       nil
     end

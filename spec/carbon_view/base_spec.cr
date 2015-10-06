@@ -9,7 +9,7 @@ module CarbonViewTest
 
   describe CarbonView::Base do
     it "delegates missing methods to the controller instance variables" do
-      controller = TestController.action("index", "request", "response")
+      # controller = TestController.action("index", "request", "response")
       # controller.index
       # CarbonView::Base.new(controller).missing_method.should eq("not missing")
     end
