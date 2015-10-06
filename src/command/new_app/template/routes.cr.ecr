@@ -1,5 +1,3 @@
 class <%= config.app_name %>App::Router < CarbonDispatch::Router
-  get "", "application#welcome"
+  get "", controller: "application", action: "welcome"
 end
-
-Carbon.application.router = <%= config.app_name %>App::Router.new
