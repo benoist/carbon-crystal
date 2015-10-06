@@ -35,7 +35,7 @@ module CarbonDispatch
 
     macro get(path, controller = nil, action = nil)
       class ::Views::{{controller.id.capitalize}}::{{action.id.capitalize}} < CarbonView::Base
-        ecr_file "app/views/{{controller.id}}/{{action.id}}.html.ecr"
+        ecr_file "src/views/{{controller.id}}/{{action.id}}.html.ecr"
       end
 
       CarbonView::Base["{{controller.id.capitalize}}Controller/{{action.id}}"] = ::Views::{{controller.id.capitalize}}::{{action.id.capitalize}}

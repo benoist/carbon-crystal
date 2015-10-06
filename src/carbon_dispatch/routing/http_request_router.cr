@@ -29,7 +29,7 @@ module CarbonDispatch
         {% message = receiver_and_message[1] %}
 
         class ::Views::{{receiver.id.capitalize}}::{{message.id.capitalize}} < CarbonView::Base
-          ecr_file "app/views/{{receiver.id}}/{{message.id}}.html.ecr"
+          ecr_file "src/views/{{receiver.id}}/{{message.id}}.html.ecr"
         end
       end
 

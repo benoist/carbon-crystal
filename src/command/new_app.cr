@@ -64,9 +64,9 @@ module Carbon
 
         template GitignoreView, "gitignore.ecr", ".gitignore"
         template ServerView, "server.cr.ecr", "server.cr"
-        template ApplicationControllerView, "application_controller.cr.ecr", "app/controllers/application_controller.cr"
-        template WelcomeView, "welcome.html.ecr", "app/views/application/welcome.html.ecr"
-        template ViewLayoutView, "application.html.ecr", "app/views/layouts/application.html.ecr"
+        template ApplicationControllerView, "application_controller.cr.ecr", "src/controllers/application_controller.cr"
+        template WelcomeView, "welcome.html.ecr", "src/views/application/welcome.html.ecr"
+        template ViewLayoutView, "application.html.ecr", "src/views/layouts/application.html.ecr"
         template ApplicationView, "application.cr.ecr", "config/application.cr"
         template EnvironmentView, "environment.cr.ecr", "config/environment.cr"
         template RoutesView, "routes.cr.ecr", "config/routes.cr"

@@ -3,7 +3,7 @@ require "./application"
 
 Carbon.root = File.expand_path("../", File.dirname(__FILE__))
 
-require "../app/**"
+require "../src/**"
 
 require "./routes"
 
