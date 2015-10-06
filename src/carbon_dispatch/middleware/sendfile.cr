@@ -5,19 +5,22 @@ module CarbonDispatch
       super()
     end
 
-    def call(env)
-      status, headers, body = app.call(env)
+    def call(request, response)
+      app.call(request, response)
+      status = response.status
+      headers = response.headers
+      body = response.body
 
       if body.is_path?
-        case type = variation(env)
+        case type = variation(request)
           when "X-Accel-Redirect"
             path = File.expand_path(body.path)
-            if url = map_accel_path(env, path)
+            if url = map_accel_path(request, path)
               headers["Content-Length"] = "0"
               headers[type]             = url
-              body                      = BodyProxy.new(nil)
+              response.body                      = BodyProxy.new(nil)
             else
-              env.errors.puts "X-Accel-Mapping header missing"
+              Carbon.logger.error "X-Accel-Mapping header missing"
             end
           when "X-Sendfile", "X-Lighttpd-Send-File"
             path = File.expand_path(body.path)
@@ -25,18 +28,17 @@ module CarbonDispatch
             headers[type]             = path
             body                      = BodyProxy.new(nil)
           else
-            env.errors.puts "Unknown x-sendfile variation: '#{type}'.\n"
+            Carbon.logger.error "Unknown x-sendfile variation: '#{type}'.\n"
         end
       end
-      { status, headers, body }
     end
 
-    def variation(env)
-      @variation || env.request.headers["HTTP_X_SENDFILE_TYPE"]
+    def variation(request)
+      @variation || request.headers["HTTP_X_SENDFILE_TYPE"]
     end
 
-    def map_accel_path(env, path)
-      if mapping = env.request.headers["HTTP_X_ACCEL_MAPPING"]
+    def map_accel_path(request, path)
+      if mapping = request.headers["HTTP_X_ACCEL_MAPPING"]
         internal, external = mapping.split('=', 2).map{ |p| p.strip }
         path.gsub(/^#{internal}/i, external)
       end

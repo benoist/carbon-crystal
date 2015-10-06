@@ -1,2 +1,2 @@
 require "./middleware/stack"
-require "./middleware/logger"
+require "./middleware/*"

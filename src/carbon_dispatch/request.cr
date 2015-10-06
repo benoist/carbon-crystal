@@ -3,6 +3,7 @@ class CarbonDispatch::Request
 
   delegate :path, @request
   delegate :method, @request
+  delegate :headers, @request
 
   def initialize(@request)
   end

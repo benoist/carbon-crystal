@@ -50,10 +50,10 @@ module Carbon
     end
 
     private def set_default_middleware
-      # middleware.use CarbonDispatch::Sendfile.new "X-Accel-Redirect"
-      # middleware.use CarbonDispatch::Static.new
-      # middleware.use CarbonDispatch::Runtime.new
-      # middleware.use CarbonDispatch::RequestId.new
+      middleware.use CarbonDispatch::Sendfile.new "X-Accel-Redirect"
+      middleware.use CarbonDispatch::Static.new
+      middleware.use CarbonDispatch::Runtime.new
+      middleware.use CarbonDispatch::RequestId.new
       middleware.use CarbonDispatch::Logger.new
     end
   end

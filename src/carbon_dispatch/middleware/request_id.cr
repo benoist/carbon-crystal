@@ -1,16 +1,14 @@
 module CarbonDispatch
   class RequestId
     include Middleware
-    def call(env)
-      env.request_id = external_request_id(env) || internal_request_id
-      status, headers, body = app.call(env)
-      headers["X-Request-Id"] = env.request_id.to_s
-
-      {status, headers, body }
+    def call(request, response)
+      request_id = external_request_id(request) || internal_request_id
+      app.call(request, response)
+      response.headers["X-Request-Id"] = request_id.to_s
     end
 
-    private def external_request_id(env)
-      if request_id = env["HTTP_X_REQUEST_ID"]?
+    private def external_request_id(request)
+      if request_id = request.headers["HTTP_X_REQUEST_ID"]?
         request_id.gsub(/[^\w\-]/, "")[0,255]
       end
     end

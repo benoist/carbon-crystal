@@ -11,16 +11,14 @@ module CarbonDispatch
 
     FORMAT_STRING = "%0.6f"
 
-    def call(env)
+    def call(request, response)
       start_time            = Time.now
-      status, headers, body = app.call(env)
+      app.call(request, response)
       request_time          = Time.now - start_time
 
-      if !headers.has_key?(@header_name)
-        headers[@header_name] = FORMAT_STRING % request_time
+      if !response.headers.has_key?(@header_name)
+        response.headers[@header_name] = FORMAT_STRING % request_time
       end
-
-      { status, headers, body }
     end
   end
 end
