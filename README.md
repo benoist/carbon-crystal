@@ -17,7 +17,7 @@ Just a POC to see how close we can stay
   - [X] RequestId
   - [X] Logger
   - [X] RemoteIP
-  - [ ] Exceptions
+  - [X] Exceptions
   - [ ] ParamsParser
   - [ ] Head
   - [ ] Cookies
