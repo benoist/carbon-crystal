@@ -16,13 +16,13 @@ Just a POC to see how close we can stay
   - [X] Runtime
   - [X] RequestId
   - [X] Logger
+  - [X] RemoteIP
   - [ ] Exceptions
-  - [ ] RemoteIP
+  - [ ] ParamsParser
+  - [ ] Head
   - [ ] Cookies
   - [ ] Sessions Cookie Store
   - [ ] Flash
-  - [ ] ParamsParser
-  - [ ] Head
   - [ ] ConditionalGet
   - [ ] ETag
 - [ ] Resourceful routing

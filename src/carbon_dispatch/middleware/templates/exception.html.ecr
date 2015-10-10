@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <title>Carbon Controller: Exception caught</title>
+  <style type="text/css">
+      body {
+          background-color: #FAFAFA;
+          color: #333;
+          margin: 0px;
+      }
+
+      body, p, ol, ul, td {
+          font-family: helvetica, verdana, arial, sans-serif;
+          font-size: 13px;
+          line-height: 18px;
+      }
+
+      header {
+          color: #F0F0F0;
+          background: #C52F24;
+          padding: 10px 30px;
+      }
+
+      h1 {
+          margin: 0.2em 0;
+          line-height: 1.1em;
+          font-size: 2em;
+      }
+
+      h2 {
+          color: #C52F24;
+          line-height: 25px;
+      }
+
+      .container {
+          padding: 0 30px;
+      }
+  </style>
+</head>
+<body>
+<header>
+  <h1><%= exception.class.to_s %></h1>
+</header>
+
+<div class="container">
+  <h2><%= exception.message %></h2>
+  <% exception.backtrace.each do |line| %>
+      <div class="trace"><%= line %></div>
+  <% end %>
+</div>
+
+<div class="container">
+  <h3>Request</h3>
+  <h4>Path</h4>
+
+  <p><%= request.path %></p>
+  <h4>Headers</h4>
+  <table>
+    <% request.headers.each do |key, value| %>
+        <tr>
+          <td><%= key %></td>
+          <td><%= value %></td>
+        </tr>
+    <% end %>
+  </table>
+</div>
+</body>
+</html>
+

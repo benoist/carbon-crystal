@@ -12,7 +12,7 @@ module CarbonController
 
         status = payload.status
         if status.nil? && payload.exception
-          status = payload.exception.class.to_s
+          status = 500
         end
         "Completed #{status} in #{event.duration_text}"
       end
