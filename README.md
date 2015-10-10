@@ -43,3 +43,4 @@ Just a POC to see how close we can stay
 ## Contributors
 
 - [benoist](https://github.com/benoist]) Benoist Claassen - creator, maintainer
+- [JanDintel](https://github.com/JanDintel]) JanDintel - contributor
