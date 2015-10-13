@@ -4,6 +4,7 @@ module CarbonController
         payload = event.payload
 
         info "Processing by #{payload.controller}##{payload.action} as HTML"
+        info "  Parameters: #{payload.params}"
     end
 
     def process_action(event)

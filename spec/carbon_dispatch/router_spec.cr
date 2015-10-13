@@ -12,15 +12,20 @@ module CarbonDispatchTest
   end
 
   class Router < CarbonDispatch::Router
-    get "/new", controller: "test", action: "new"
     get "/", controller: "test", action: "index"
+    get "/new", controller: "test", action: "new"
   end
 
   describe CarbonDispatch::Router do
-    it "creates a router" do
-      router = Router.new(Router.routes.dup)
+    it "creates routes" do
+      router = Router.routes
+      router.should be_a(Array(CarbonDispatch::Route))
+    end
 
-      # puts router.inspect
+    it "adds routes" do
+      routes = Router.routes
+      routes[0].should eq CarbonDispatch::Route.create("test", "index", "/")
+      routes[1].should eq CarbonDispatch::Route.create("test", "new", "/new")
     end
   end
 end

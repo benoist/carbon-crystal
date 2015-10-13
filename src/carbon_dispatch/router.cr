@@ -15,7 +15,15 @@ module CarbonDispatch
     end
 
     def call(request, response)
-      action = routes[request.path]?
+      action = nil
+      routes.each do |route|
+        match = route.match(request.path)
+        if match.is_a?(Hash(String, String?))
+          request.path_params = match
+          action = route
+          break
+        end
+      end
 
       if action
         action.call(request, response)
@@ -26,7 +34,7 @@ module CarbonDispatch
     end
 
     def self.routes
-      @@routes ||= {} of String => CarbonDispatch::Request, CarbonDispatch::Response -> Nil
+      @@routes ||= [] of Route
     end
 
     def self.views
@@ -40,9 +48,7 @@ module CarbonDispatch
 
       CarbonView::Base["{{controller.id.capitalize}}Controller/{{action.id}}"] = ::Views::{{controller.id.capitalize}}::{{action.id.capitalize}}
 
-      self.routes[{{path}}] = ->(request : CarbonDispatch::Request, response : CarbonDispatch::Response) {
-        {{controller.id.capitalize}}Controller.action({{action}}, request, response)
-      }
+      self.routes << CarbonDispatch::Route.create({{controller}}, {{action}}, {{path}})
     end
   end
 end

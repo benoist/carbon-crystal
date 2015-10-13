@@ -3,7 +3,7 @@ class FileString
   end
 
   def join(*other)
-    FileString.new(File.join(@string, *other))
+    FileString.new(File.join(@string.to_s, *other.map(&.to_s)))
   end
 
   def to_s

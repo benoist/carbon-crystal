@@ -11,6 +11,7 @@ module CarbonController
       raw_payload.action     = @_action_name
       raw_payload.method     = request.method
       raw_payload.path       = (request.path rescue "unknown")
+      raw_payload.params     = request.params
 
       CarbonSupport::Notifications.instrument("start_processing.carbon_controller", raw_payload)
 

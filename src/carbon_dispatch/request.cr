@@ -1,11 +1,44 @@
 class CarbonDispatch::Request
-  getter :request
+  getter :request, :path_params
 
   delegate :path, @request
   delegate :method, @request
   delegate :headers, @request
 
   def initialize(@request)
+    @path_params = Hash(String, String?).new
+  end
+
+  def params
+    @params ||= request_params.merge(path_params.merge(query_params))
+  end
+
+  def query_params
+    query_params = @query_params
+    return query_params if query_params
+
+    query_params = Hash(String, String?).new
+
+    HTTP::Params.parse(@request.query.to_s) do |key, value|
+      query_params[key] = value
+    end
+    @query_params = query_params
+  end
+
+  def request_params
+    request_params = @request_params
+    return request_params if request_params
+
+    request_params = Hash(String, String?).new
+
+    HTTP::Params.parse(@request.body.to_s) do |key, value|
+      request_params[key] = value
+    end
+    @request_params = request_params
+  end
+
+  def path_params=(params : Hash(String, String?))
+    @path_params = params
   end
 
   def ip
