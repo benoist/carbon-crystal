@@ -56,6 +56,7 @@ module Carbon
       middleware.use CarbonDispatch::RequestId.new
       middleware.use CarbonDispatch::Logger.new
       middleware.use CarbonDispatch::ShowExceptions.new
+      middleware.use CarbonDispatch::Head.new
       # middleware.use CarbonDispatch::Cookies.new
       # middleware.use CarbonDispatch::Sessions.new
       # middleware.use CarbonDispatch::Flash.new

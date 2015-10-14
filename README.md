@@ -19,7 +19,7 @@ Just a POC to see how close we can stay
   - [X] RemoteIP
   - [X] Exceptions
   - [X] ParamsParser
-  - [ ] Head
+  - [X] Head
   - [ ] Cookies
   - [ ] Sessions Cookie Store
   - [ ] Flash
