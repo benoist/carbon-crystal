@@ -3,8 +3,8 @@ require "./subscriber"
 module CarbonSupport
   class LogSubscriber < Subscriber
     # Embed in a String to clear all previous ANSI sequences.
-    CLEAR   = "\e[0m"
-    BOLD    = "\e[1m"
+    CLEAR = "\e[0m"
+    BOLD  = "\e[1m"
 
     # Colors
     BLACK   = "\e[30m"
@@ -56,7 +56,7 @@ module CarbonSupport
     # option is set to +true+, it also adds bold to the string. This is based
     # on the Highline implementation and will automatically append CLEAR to the
     # end of the returned String.
-    macro color(text, color, bold=false)
+    macro color(text, color, bold = false)
       color = {{@type}}::{{color.id.upcase}}
       bold  = {{bold.id}} ? BOLD : ""
       "#{bold}#{color}{{text.id}}#{CLEAR}"

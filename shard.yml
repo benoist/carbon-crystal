@@ -4,5 +4,11 @@ version: 0.1.0
 authors:
   - Benoist Claassen <benoist.claassen@gmail.com>
 
+#dependencies:
+#  -
+#  openssl:
+#    github: datanoise/openssl.cr
+#    branch: master
+
 license: MIT
 

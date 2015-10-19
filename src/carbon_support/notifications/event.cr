@@ -10,17 +10,17 @@ module CarbonSupport
       property :object
 
       def initialize(name : String, start : Time, ending : Time, transaction_id : String, payload : Payload)
-        @name           = name
-        @payload        = payload
-        @start          = start
+        @name = name
+        @payload = payload
+        @start = start
         @transaction_id = transaction_id
-        @end            = ending
-        @children       = [] of Event
-        @duration       = nil
+        @end = ending
+        @children = [] of Event
+        @duration = nil
       end
 
       def duration
-        start  = @start || Time.now
+        start = @start || Time.now
         finish = @finish || Time.now
 
         finish - start
@@ -49,10 +49,10 @@ module CarbonSupport
 
       def ==(other)
         name == other.name &&
-            payload == other.payload &&
-            start == other.start &&
-            self.end == other.end &&
-            transaction_id == other.transaction_id
+          payload == other.payload &&
+          start == other.start &&
+          self.end == other.end &&
+          transaction_id == other.transaction_id
       end
     end
   end

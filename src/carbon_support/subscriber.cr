@@ -1,6 +1,6 @@
 module CarbonSupport
   class Subscriber
-    macro attach_to(namespace, subscriber = {{@type}}.new, notifier=CarbonSupport::Notifications)
+    macro attach_to(namespace, subscriber = {{@type}}.new, notifier = CarbonSupport::Notifications)
       @@namespace  = {{namespace}}
       @@subscriber = {{subscriber}}
       @@notifier   = {{notifier}}
@@ -37,13 +37,14 @@ module CarbonSupport
 
     getter :patterns # :nodoc:
 
+
     def initialize
       @queue_key = [self.class.name, object_id].join "-"
-      @patterns  = [] of String
+      @patterns = [] of String
     end
 
     def callers
-      @callers ||= {} of String => CarbonSupport::Notifications::Event->
+      @callers ||= {} of String => CarbonSupport::Notifications::Event ->
     end
 
     def start(name, id, payload)
@@ -58,8 +59,8 @@ module CarbonSupport
     end
 
     def finish(name, id, payload)
-      finished  = Time.now
-      event     = event_stack.pop
+      finished = Time.now
+      event = event_stack.pop
       event.end = finished
       event.payload = payload
 

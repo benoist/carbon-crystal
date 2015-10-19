@@ -20,11 +20,11 @@ module CarbonDispatch
       params = rparen.flat_map { |word| word.split(/(:\w+)/) }
       slugged = params.flat_map { |word| word.split(/(\*\w+)/) }
       pattern = slugged.map do |word|
-        word.gsub(/\(/) { "(?:" }
-            .gsub(/\)/) { "){0,1}" }
-            .gsub(/:(\w+)/) { @params << $1 ; "(?<#{$1}>[^/]+)" }
-            .gsub(/\*(\w+)/) { @params << $1; "(?<#{$1}>.+)" }
-      end.join
+                  word.gsub(/\(/) { "(?:" }
+                      .gsub(/\)/) { "){0,1}" }
+                      .gsub(/:(\w+)/) { @params << $1; "(?<#{$1}>[^/]+)" }
+                      .gsub(/\*(\w+)/) { @params << $1; "(?<#{$1}>.+)" }
+                end.join
 
       @pattern = Regex.new("^#{pattern}$")
     end
@@ -35,7 +35,7 @@ module CarbonDispatch
       match = path.to_s.match(@pattern)
 
       if match
-        @params.inject({} of String => String?) { |hash, param| hash[param] = match[param]? ; hash }
+        @params.inject({} of String => String?) { |hash, param| hash[param] = match[param]?; hash }
       else
         false
       end

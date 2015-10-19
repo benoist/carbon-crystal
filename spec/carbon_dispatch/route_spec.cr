@@ -2,6 +2,7 @@ require "../spec_helper"
 
 module CarbonDispatchTest
   extend self
+
   def route(controller, action, path, app = app)
     CarbonDispatch::Route.new(controller, action, path, app)
   end
@@ -11,7 +12,6 @@ module CarbonDispatchTest
   end
 
   describe CarbonDispatch::Route do
-
     context "pattern" do
       it "matches normal string" do
         route("TestController", "index", "/").match("/").should be_truthy

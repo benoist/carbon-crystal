@@ -1,7 +1,6 @@
 module Carbon
   class Command
     class NewApp
-
       def self.run(args)
         config = Config.new
 
@@ -19,8 +18,8 @@ module Carbon
           end
 
           opts.unknown_args do |args, after_dash|
-            config.name          = Helper.fetch_required_parameter(opts, args, "NAME")
-            config.dir           = args.empty? ? config.name : args.shift
+            config.name = Helper.fetch_required_parameter(opts, args, "NAME")
+            config.dir = args.empty? ? config.name : args.shift
           end
         end
 
@@ -34,9 +33,9 @@ module Carbon
         property :silent
 
         def initialize(
-            @name = "none",
-            @dir = "none",
-            @silent = false)
+                       @name = "none",
+                       @dir = "none",
+                       @silent = false)
         end
 
         def app_name

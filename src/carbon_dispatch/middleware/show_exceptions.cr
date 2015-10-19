@@ -4,9 +4,9 @@ module CarbonDispatch
       ecr_file __DIR__ + "/templates/exception.html.ecr"
 
       def call(exception, request, response)
-        @exception     = exception
-        @request       = request
-        @response      = response
+        @exception = exception
+        @request = request
+        @response = response
         response.body = to_s
       end
 
@@ -42,9 +42,9 @@ module CarbonDispatch
       begin
         @exception_app.call(exception, request, response)
       rescue e : Exception
-        response.status                  = 500
+        response.status = 500
         response.headers["Content-Type"] = "text/plain"
-        response.body                    = "500 Internal server error"
+        response.body = "500 Internal server error"
       end
     end
   end

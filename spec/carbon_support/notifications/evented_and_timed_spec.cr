@@ -33,8 +33,8 @@ module CarbonSupportTest
     notifier = Fanout.new
     listener = Listener.new
     notifier.subscribe "hi", listener
-    notifier.start  "hi", "1", Payload.new
-    notifier.start  "hi", "2", Payload.new
+    notifier.start "hi", "1", Payload.new
+    notifier.start "hi", "2", Payload.new
     notifier.finish "hi", "2", Payload.new
     notifier.finish "hi", "1", Payload.new
 
@@ -43,7 +43,7 @@ module CarbonSupportTest
       Event.new("start.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new),
       Event.new("start.hi", Time.epoch(0), Time.epoch(0), "2", Payload.new),
       Event.new("finish.hi", Time.epoch(0), Time.epoch(0), "2", Payload.new),
-      Event.new("finish.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new)
+      Event.new("finish.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new),
     ]
   end
 
@@ -64,8 +64,8 @@ module CarbonSupportTest
     notifier.finish "hi", "1", Payload.new
 
     listener.events.should eq [
-                                  Event.new("start.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new),
-                                  Event.new("finish.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new)
-                              ]
+      Event.new("start.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new),
+      Event.new("finish.hi", Time.epoch(0), Time.epoch(0), "1", Payload.new),
+    ]
   end
 end

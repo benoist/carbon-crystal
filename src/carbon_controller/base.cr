@@ -11,7 +11,7 @@ module CarbonController
     end
 
     def render_template(template)
-      response.body = CarbonView::Base["#{self.class.to_s}/#{template}"].new(controller=self).to_s
+      response.body = CarbonView::Base["#{self.class.to_s}/#{template}"].new(controller = self).to_s
       response.headers["Content-Type"] = "text/html"
     end
 

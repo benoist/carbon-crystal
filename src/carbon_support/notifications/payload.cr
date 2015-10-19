@@ -17,7 +17,7 @@ module CarbonSupport
 
       def ==(other : Payload)
         exception == other.exception &&
-            message == other.message
+          message == other.message
       end
     end
   end

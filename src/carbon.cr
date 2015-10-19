@@ -23,11 +23,11 @@ module Carbon
 
   def self.logger
     @@logger ||= Logger.new(STDOUT).tap do |logger|
-      logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
-        io <<  message
-      end
-      logger.level = env.development? ? Logger::DEBUG : Logger::INFO
-    end
+                   logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
+                                        io << message
+                                      end
+                   logger.level = env.development? ? Logger::DEBUG : Logger::INFO
+                 end
   end
 
   def self.env

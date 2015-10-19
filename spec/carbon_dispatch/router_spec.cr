@@ -3,11 +3,9 @@ require "../spec_helper"
 module CarbonDispatchTest
   class TestController < CarbonController::Base
     def index
-
     end
 
     def new
-
     end
   end
 

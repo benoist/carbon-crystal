@@ -28,26 +28,26 @@ module CarbonSupportTest
     it "logs with colors" do
       IO.pipe do |r, w|
         CarbonSupport::LogSubscriber.logger = Logger.new(w).tap do |logger|
-          logger.level = Logger::Severity::DEBUG
-          logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
-            io <<  message
-          end
-        end
+                                                logger.level = Logger::Severity::DEBUG
+                                                logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
+                                                                     io << message
+                                                                   end
+                                              end
         log_subscriber = MyLogSubscriber.new
         log_subscriber.bar(nil)
 
-        r.gets.should eq "\e[31mcool\e[0m, \e[1m\e[34misn't it?\e[0m\n",
+        r.gets.should eq "\e[31mcool\e[0m, \e[1m\e[34misn't it?\e[0m\n"
       end
     end
 
     it "loggs" do
       IO.pipe do |r, w|
         CarbonSupport::LogSubscriber.logger = Logger.new(w).tap do |logger|
-          logger.level = Logger::Severity::DEBUG
-          logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
-            io <<  message
-          end
-        end
+                                                logger.level = Logger::Severity::DEBUG
+                                                logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
+                                                                     io << message
+                                                                   end
+                                              end
         log_subscriber = MyLogSubscriber.new
         log_subscriber.foo(nil)
 
@@ -56,6 +56,5 @@ module CarbonSupportTest
         r.gets.should eq "warn\n"
       end
     end
-
   end
 end

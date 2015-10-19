@@ -4,7 +4,7 @@ module CarbonSupport
       getter :id
 
       def initialize(notifier)
-        @id       = unique_id
+        @id = unique_id
         @notifier = notifier
       end
 

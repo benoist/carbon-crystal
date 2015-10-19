@@ -6,7 +6,6 @@ require "./subscriber"
 
 module CarbonSupport
   module Notifications
-
     def self.notifier=(notifier)
       @@notifier = notifier
     end
@@ -29,7 +28,7 @@ module CarbonSupport
 
     def self.instrument(name, payload = Payload.new)
       if notifier.listening?(name)
-        instrumenter.instrument(name, payload) {}
+        instrumenter.instrument(name, payload) { }
       end
     end
 
@@ -37,7 +36,7 @@ module CarbonSupport
       notifier.subscribe(pattern, subscriber)
     end
 
-    def self.subscribe(pattern, callback : CarbonSupport::Notifications::Event -> )
+    def self.subscribe(pattern, callback : CarbonSupport::Notifications::Event ->)
       notifier.subscribe(pattern, callback)
     end
 
@@ -62,6 +61,7 @@ module CarbonSupport
 
     class InstrumentationRegistry # :nodoc:
       INSTANCE = new
+
       def initialize
         @registry = Hash(Fanout, Instrumenter).new
       end

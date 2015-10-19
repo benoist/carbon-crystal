@@ -72,9 +72,9 @@ module CarbonSupport
           end
         end
 
-        class Evented #:nodoc:
+        class Evented # :nodoc:
           def self.timestack
-            @@timestack ||= Hash(Fiber, Array(Time)).new { |h,k| h[k] = [] of Time }
+            @@timestack ||= Hash(Fiber, Array(Time)).new { |h, k| h[k] = [] of Time }
           end
 
           def initialize(pattern, delegate)

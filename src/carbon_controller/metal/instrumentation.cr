@@ -8,10 +8,10 @@ module CarbonController
       raw_payload = CarbonSupport::Notifications::Payload.new
 
       raw_payload.controller = self.class.to_s
-      raw_payload.action     = @_action_name
-      raw_payload.method     = request.method
-      raw_payload.path       = (request.path rescue "unknown")
-      raw_payload.params     = request.params
+      raw_payload.action = @_action_name
+      raw_payload.method = request.method
+      raw_payload.path = (request.path rescue "unknown")
+      raw_payload.params = request.params
 
       CarbonSupport::Notifications.instrument("start_processing.carbon_controller", raw_payload)
 
@@ -28,8 +28,8 @@ module CarbonController
 
     def render(*args)
       @view_runtime = cleanup_view_runtime do
-        Benchmark.realtime { @render_output = super }
-      end
+                        Benchmark.realtime { @render_output = super }
+                      end
       @render_output
     end
 
@@ -40,7 +40,6 @@ module CarbonController
     def cleanup_view_runtime
       yield
     end
-
 
     protected def append_info_to_payload(payload)
       payload.view_runtime = view_runtime

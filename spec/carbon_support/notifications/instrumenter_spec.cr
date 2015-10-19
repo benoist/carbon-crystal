@@ -7,7 +7,7 @@ module CarbonSupportTest
     getter :starts, :finishes
 
     def initialize
-      @starts   = [] of {String, String, CarbonSupport::Notifications::Payload}
+      @starts = [] of {String, String, CarbonSupport::Notifications::Payload}
       @finishes = [] of {String, String, CarbonSupport::Notifications::Payload}
     end
 
@@ -22,9 +22,9 @@ module CarbonSupportTest
 
   describe Instrumenter do
     it "calls the block" do
-      notifier     = TestNotifier.new
+      notifier = TestNotifier.new
       instrumenter = Instrumenter.new notifier
-      payload      = Payload.new
+      payload = Payload.new
 
       called = false
       instrumenter.instrument("foo", payload) {
@@ -35,7 +35,7 @@ module CarbonSupportTest
     end
 
     it "yield the payload" do
-      notifier     = TestNotifier.new
+      notifier = TestNotifier.new
       instrumenter = Instrumenter.new notifier
       instrumenter.instrument("awesome") { |p| p.message = "test" }.should eq "test"
       notifier.finishes.size.should eq 1
@@ -45,9 +45,9 @@ module CarbonSupportTest
     end
 
     it "tests start" do
-      notifier     = TestNotifier.new
+      notifier = TestNotifier.new
       instrumenter = Instrumenter.new notifier
-      payload      = Payload.new
+      payload = Payload.new
 
       instrumenter.start("foo", payload)
 
@@ -56,9 +56,9 @@ module CarbonSupportTest
     end
 
     it "tests finish" do
-      notifier     = TestNotifier.new
+      notifier = TestNotifier.new
       instrumenter = Instrumenter.new notifier
-      payload      = Payload.new
+      payload = Payload.new
       instrumenter.finish("foo", payload)
       notifier.finishes.should eq [{"foo", instrumenter.id, payload}]
       notifier.starts.empty?.should be_truthy

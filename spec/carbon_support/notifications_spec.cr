@@ -3,11 +3,11 @@ require "../spec_helper"
 module CarbonSupportTest
   describe CarbonSupport::Notifications do
     it "tests subscribed" do
-      name     = "foo"
-      name2    = name * 2
+      name = "foo"
+      name2 = name * 2
       expected = [name, name]
 
-      events   = [] of String
+      events = [] of String
       callback = ->(event : CarbonSupport::Notifications::Event) { events << event.name }
       CarbonSupport::Notifications.subscribed(callback, name) do
         CarbonSupport::Notifications.instrument(name)
@@ -22,10 +22,10 @@ module CarbonSupportTest
 
     it "removes a subscription when unsubscribing" do
       notifier = CarbonSupport::Notifications::Fanout.new
-      events   = [] of String
+      events = [] of String
       subscription = notifier.subscribe do |event|
-        events << event.name
-      end
+                       events << event.name
+                     end
       notifier.publish "name", Time.now, Time.now, "id", CarbonSupport::Notifications::Payload.new
       notifier.wait
       events.should eq ["name"]
@@ -37,10 +37,10 @@ module CarbonSupportTest
 
     it "removes a subscription when unsubscribing with name" do
       notifier = CarbonSupport::Notifications::Fanout.new
-      named_events   = [] of String
+      named_events = [] of String
       subscription = notifier.subscribe "named.subscription" do |event|
-        named_events << event.name
-      end
+                       named_events << event.name
+                     end
       notifier.publish "named.subscription", Time.now, Time.now, "id", CarbonSupport::Notifications::Payload.new
       notifier.wait
       named_events.should eq ["named.subscription"]
@@ -52,14 +52,14 @@ module CarbonSupportTest
 
     it "leaves the other subscriptions when unsubscribing by name " do
       notifier = CarbonSupport::Notifications::Fanout.new
-      events   = [] of String
-      named_events   = [] of String
+      events = [] of String
+      named_events = [] of String
       subscription = notifier.subscribe "named.subscription" do |event|
-        named_events << event.name
-      end
+                       named_events << event.name
+                     end
       subscription = notifier.subscribe do |event|
-        events << event.name
-      end
+                       events << event.name
+                     end
       notifier.publish "named.subscription", Time.now, Time.now, "id", CarbonSupport::Notifications::Payload.new
       notifier.wait
       events.should eq ["named.subscription"]
@@ -73,20 +73,20 @@ module CarbonSupportTest
       CarbonSupport::Notifications.instrument("name") { 1 + 1 }.should eq 2
     end
 
-#     def test_instrument_yields_the_payload_for_further_modification
-#       assert_equal 2, instrument(:awesome) { |p| p[:result] = 1 + 1 }
-#       assert_equal 1, @events.size
-#       assert_equal :awesome, @events.first.name
-#       assert_equal Hash[:result => 2], @events.first.payload
-#     end
-#
+    #     def test_instrument_yields_the_payload_for_further_modification
+    #       assert_equal 2, instrument(:awesome) { |p| p[:result] = 1 + 1 }
+    #       assert_equal 1, @events.size
+    #       assert_equal :awesome, @events.first.name
+    #       assert_equal Hash[:result => 2], @events.first.payload
+    #     end
+    #
     it "exposes an id method" do
       CarbonSupport::Notifications.instrumenter.id.size.should eq 20
     end
 
     it "allows nested events" do
       CarbonSupport::Notifications.notifier = CarbonSupport::Notifications::Fanout.new
-      events   = [] of String
+      events = [] of String
       CarbonSupport::Notifications.notifier.subscribe do |event|
         events << event.name
       end
@@ -105,7 +105,7 @@ module CarbonSupportTest
 
     it "publishes when exceptions are raised" do
       CarbonSupport::Notifications.notifier = CarbonSupport::Notifications::Fanout.new
-      events   = [] of String
+      events = [] of String
       CarbonSupport::Notifications.notifier.subscribe do |event|
         events << event.name
       end
@@ -123,7 +123,7 @@ module CarbonSupportTest
 
     it "publishes when instrumented without a block" do
       CarbonSupport::Notifications.notifier = CarbonSupport::Notifications::Fanout.new
-      events   = [] of String
+      events = [] of String
       CarbonSupport::Notifications.notifier.subscribe do |event|
         events << event.name
       end
@@ -136,12 +136,12 @@ module CarbonSupportTest
 
     it "publishes events with details" do
       CarbonSupport::Notifications.notifier = CarbonSupport::Notifications::Fanout.new
-      events   = [] of CarbonSupport::Notifications::Event
+      events = [] of CarbonSupport::Notifications::Event
       CarbonSupport::Notifications.notifier.subscribe do |event|
         events << event
       end
 
-      CarbonSupport::Notifications.instrument("outer", CarbonSupport::Notifications::Payload.new.tap { |p| p.message = "test"}) do
+      CarbonSupport::Notifications.instrument("outer", CarbonSupport::Notifications::Payload.new.tap { |p| p.message = "test" }) do
         CarbonSupport::Notifications.instrument("inner")
       end
 

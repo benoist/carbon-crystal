@@ -5,7 +5,7 @@ module CarbonController
     end
 
     def process(name, block)
-      @_action_name   = name
+      @_action_name = name
       @_response_body = nil
       process_action(name, block)
     end

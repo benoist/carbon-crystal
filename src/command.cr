@@ -16,7 +16,6 @@ module Carbon
         --version, -v            show version
     USAGE
 
-
     def self.run(options)
       self.new(options).run
     end

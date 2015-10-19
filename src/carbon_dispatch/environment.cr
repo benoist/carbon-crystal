@@ -17,7 +17,7 @@ module CarbonDispatch
     end
 
     def []?(value)
-    @request.headers[value]?
+      @request.headers[value]?
     end
   end
 end
