@@ -16,9 +16,10 @@ module CarbonSupport::Callbacks
     def run_callback(method)
       if only.any?
         return block.call if only.includes?(method)
-      end
-      if except.any?
+      elsif except.any?
         return block.call unless except.includes?(method)
+      else
+        block.call
       end
     end
 
@@ -82,14 +83,23 @@ module CarbonSupport::Callbacks
   end
 
   def run_callbacks(method : Symbol)
-    callbacks.select(&.before?).each do |before|
-      before.run_callback(method) if !skip_callbacks.includes?(before.method)
-    end
+    halted = !callbacks.select(&.before?).all? do |before|
+               if !skip_callbacks.includes?(before.method)
+                 before.run_callback(method) != false
+               else
+                 true
+               end
+             end
+    return false if halted
 
     yield
 
-    callbacks.select(&.after?).each do |after|
-      after.run_callback(method) if !skip_callbacks.includes?(after.method)
+    callbacks.select(&.after?).all? do |after|
+      if !skip_callbacks.includes?(after.method)
+        after.run_callback(method) != false
+      else
+        true
+      end
     end
   end
 end
