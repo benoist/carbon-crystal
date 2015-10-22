@@ -17,7 +17,7 @@ module CarbonDispatch
       request_time = Time.now - start_time
 
       if !response.headers.has_key?(@header_name)
-        response.headers[@header_name] = FORMAT_STRING % request_time
+        response.headers[@header_name] = FORMAT_STRING % request_time.to_f
       end
     end
   end
