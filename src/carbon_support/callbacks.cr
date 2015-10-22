@@ -84,12 +84,12 @@ module CarbonSupport::Callbacks
 
   def run_callbacks(method : Symbol)
     halted = !callbacks.select(&.before?).all? do |before|
-               if !skip_callbacks.includes?(before.method)
-                 before.run_callback(method) != false
-               else
-                 true
-               end
-             end
+      if !skip_callbacks.includes?(before.method)
+        before.run_callback(method) != false
+      else
+        true
+      end
+    end
     return false if halted
 
     yield

@@ -28,11 +28,11 @@ module CarbonSupportTest
     it "logs with colors" do
       IO.pipe do |r, w|
         CarbonSupport::LogSubscriber.logger = Logger.new(w).tap do |logger|
-                                                logger.level = Logger::Severity::DEBUG
-                                                logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
-                                                                     io << message
-                                                                   end
-                                              end
+          logger.level = Logger::Severity::DEBUG
+          logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
+            io << message
+          end
+        end
         log_subscriber = MyLogSubscriber.new
         log_subscriber.bar(nil)
 
@@ -43,11 +43,11 @@ module CarbonSupportTest
     it "loggs" do
       IO.pipe do |r, w|
         CarbonSupport::LogSubscriber.logger = Logger.new(w).tap do |logger|
-                                                logger.level = Logger::Severity::DEBUG
-                                                logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
-                                                                     io << message
-                                                                   end
-                                              end
+          logger.level = Logger::Severity::DEBUG
+          logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
+            io << message
+          end
+        end
         log_subscriber = MyLogSubscriber.new
         log_subscriber.foo(nil)
 

@@ -28,8 +28,8 @@ module CarbonController
 
     def render(*args)
       @view_runtime = cleanup_view_runtime do
-                        Benchmark.realtime { @render_output = super }
-                      end
+        Benchmark.realtime { @render_output = super }
+      end
       @render_output
     end
 

@@ -24,8 +24,8 @@ module CarbonSupportTest
       notifier = CarbonSupport::Notifications::Fanout.new
       events = [] of String
       subscription = notifier.subscribe do |event|
-                       events << event.name
-                     end
+        events << event.name
+      end
       notifier.publish "name", Time.now, Time.now, "id", CarbonSupport::Notifications::Payload.new
       notifier.wait
       events.should eq ["name"]
@@ -39,8 +39,8 @@ module CarbonSupportTest
       notifier = CarbonSupport::Notifications::Fanout.new
       named_events = [] of String
       subscription = notifier.subscribe "named.subscription" do |event|
-                       named_events << event.name
-                     end
+        named_events << event.name
+      end
       notifier.publish "named.subscription", Time.now, Time.now, "id", CarbonSupport::Notifications::Payload.new
       notifier.wait
       named_events.should eq ["named.subscription"]
@@ -55,11 +55,11 @@ module CarbonSupportTest
       events = [] of String
       named_events = [] of String
       subscription = notifier.subscribe "named.subscription" do |event|
-                       named_events << event.name
-                     end
+        named_events << event.name
+      end
       subscription = notifier.subscribe do |event|
-                       events << event.name
-                     end
+        events << event.name
+      end
       notifier.publish "named.subscription", Time.now, Time.now, "id", CarbonSupport::Notifications::Payload.new
       notifier.wait
       events.should eq ["named.subscription"]
