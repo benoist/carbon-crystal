@@ -1,6 +1,6 @@
 class ApplicationController < CarbonController::Base
-  # before_action :before
-  # after_action :after2
+  before_action :before
+  after_action :after2
 
   def index
     @test = "test"

@@ -2,6 +2,8 @@ require "./metal"
 
 module CarbonController
   class Base < Metal
+    delegate :params, :request
+
     def request
       @_request
     end
@@ -21,8 +23,8 @@ module CarbonController
     end
 
     def render_json(object)
-      response.headers["Content-Type"] = "application/json"
       response.body = object.to_json
+      response.headers["Content-Type"] = "application/json"
     end
   end
 end
