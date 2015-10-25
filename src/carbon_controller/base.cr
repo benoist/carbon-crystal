@@ -4,6 +4,15 @@ module CarbonController
   class Base < Metal
     delegate :params, :request
 
+    macro inherited
+      def process_action(name, block)
+        super
+      end
+
+      include CarbonController::Callbacks
+      include CarbonController::Instrumentation
+    end
+
     def request
       @_request
     end

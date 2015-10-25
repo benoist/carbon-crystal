@@ -1,6 +1,7 @@
 class ApplicationController < CarbonController::Base
-  # before_action :before
-  # after_action :after2
+  before_action :before
+  around_action :around
+  after_action :after2
 
   def index
     @test = "test"
@@ -18,5 +19,11 @@ class ApplicationController < CarbonController::Base
 
   private def after2
     Carbon.logger.debug "After action"
+  end
+
+  private def around
+    Carbon.logger.debug "start"
+    yield
+    Carbon.logger.debug "finish"
   end
 end

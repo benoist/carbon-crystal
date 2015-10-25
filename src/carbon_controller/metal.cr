@@ -2,9 +2,6 @@ require "./metal/*"
 
 module CarbonController
   class Metal < Abstract
-    include CarbonController::Instrumentation
-    include CarbonSupport::Callbacks
-
     macro action(name, request, response)
       proc = ->(controller : {{@type}}) { controller.{{name.id}} }
 

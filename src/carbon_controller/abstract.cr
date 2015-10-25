@@ -1,3 +1,5 @@
+require "./abstract/*"
+
 module CarbonController
   class Abstract
     def process_action(name, block)

@@ -16,16 +16,15 @@ module CarbonSupport::Callbacks
     private def load_{{name.id}}_callbacks
       previous_def.tap do |chain|
         {% if type == :around %}
-          around = ->(block : ->) { self.{{filter.id}}(&block) }
-        callback = Callback::Around.new("{{name.id}}", around)
+          around = ->(block : ->) { {{filter.id}}(&block) }
+          callback = Callback::Around.new("{{name.id}}", around)
         {% elsif type == :before %}
-          before = ->(block : ->) { self.{{filter.id}} }
+          before = ->(block : ->) { {{filter.id}} }
           callback = Callback::Before.new("{{name.id}}", before)
         {% elsif type == :after %}
-          after = ->(block : ->) { self.{{filter.id}} }
+          after = ->(block : ->) { {{filter.id}} }
           callback = Callback::After.new("{{name.id}}", after)
         {% end %}
-
         chain.append(callback)
       end
     end
@@ -35,7 +34,7 @@ module CarbonSupport::Callbacks
     callbacks = load_{{for.id}}_callbacks
 
     runner = callbacks.compile
-    e = Environment.new(self, false, nil) {{ block.id }}
+    e = CarbonSupport::Callbacks::Environment.new(self, false, nil) {{ block.id }}
     runner.call(e)
     e.value
   end
