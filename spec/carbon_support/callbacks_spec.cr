@@ -8,7 +8,6 @@ module CarbonSupportTest
     define_callbacks :test
 
     set_callback :test, :before, :before1
-
     set_callback :test, :around, :test_around
     set_callback :test, :before, :before2
     set_callback :test, :after, :after1
@@ -28,11 +27,15 @@ module CarbonSupportTest
     end
 
     def test_around
-      callstack << "around1a"; yield; callstack << "around1b"
+      callstack << "around1a"
+      yield
+      callstack << "around1b"
     end
 
     def test_around2
-      callstack << "around2a"; yield; callstack << "around2b"
+      callstack << "around2a"
+      yield
+      callstack << "around2b"
     end
 
     def before1
