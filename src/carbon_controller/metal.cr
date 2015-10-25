@@ -21,9 +21,7 @@ module CarbonController
     end
 
     def dispatch(action, block)
-      run_callbacks(action) do
-        process(action, block)
-      end
+      process(action, block)
       nil
     end
 

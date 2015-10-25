@@ -19,6 +19,5 @@ guard 'process', :name => 'Worksheet', :command => 'crystal run worksheet.cr' do
 end
 
 guard 'process', :name => 'Format', :command => 'crystal tool format' do
-  watch(/src\/(.*).cr$/)
-  watch(/spec\/(.*).cr$/)
+  watch(/(.*).cr$/)
 end
