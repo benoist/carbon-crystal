@@ -2,7 +2,10 @@ module CarbonController
   module Callbacks
     macro included
       include CarbonSupport::Callbacks
-      define_callbacks :process_action
+      define_callbacks(:process_action, CallbackOptions.new(
+                                          terminator: ->(controller : CarbonController::Base) { controller.response.body },
+                                          skip_after_callbacks_if_terminated: true)
+      )
 
       def process_action(name, block)
         run_callbacks(:process_action) do

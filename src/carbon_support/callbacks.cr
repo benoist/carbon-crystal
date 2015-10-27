@@ -1,13 +1,17 @@
+require "./callbacks/callback_options"
 require "./callbacks/environment"
 require "./callbacks/chain"
 require "./callbacks/callback"
 require "./callbacks/sequence"
 
 module CarbonSupport::Callbacks
-  macro define_callbacks(*names)
+  macro define_callbacks(*args)
+    {% options = !args.last.is_a?(SymbolLiteral) ? args.last : "CallbackOptions.new" %}
+    {% names = args.select { |arg| arg.is_a?(SymbolLiteral) } %}
+
     {% for name in names %}
       private def load_{{name.id}}_callbacks
-        @_{{name.id}}_callbacks = CallbackChain.new("{{name.id}}")
+        @_{{name.id}}_callbacks = CallbackChain.new("{{name.id}}", {{options.id}})
       end
     {% end %}
   end

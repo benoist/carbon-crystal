@@ -1,7 +1,7 @@
 class CarbonSupport::Callbacks::CallbackChain
   getter :name
 
-  def initialize(name)
+  def initialize(name, @options : CallbackOptions)
     @name = name
     @chain = [] of CallbackType
   end
