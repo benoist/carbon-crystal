@@ -1,7 +1,15 @@
 class CarbonSupport::Callbacks::CallbackChain
-  getter :name
+  class Options
+    getter :terminator, :if, :unless, :skip_after_callbacks_if_terminated
 
-  def initialize(name, @options : CallbackOptions)
+    def initialize(terminator = nil, @if = nil, @unless = nil, @skip_after_callbacks_if_terminated = false)
+      @terminator = terminator || ->(target : Object, result : Object) { false }
+    end
+  end
+
+  getter :name, :options
+
+  def initialize(name, @options : Options)
     @name = name
     @chain = [] of CallbackType
   end

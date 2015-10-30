@@ -1,4 +1,3 @@
-require "./callbacks/callback_options"
 require "./callbacks/environment"
 require "./callbacks/chain"
 require "./callbacks/callback"
@@ -6,7 +5,7 @@ require "./callbacks/sequence"
 
 module CarbonSupport::Callbacks
   macro define_callbacks(*args)
-    {% options = !args.last.is_a?(SymbolLiteral) ? args.last : "CallbackOptions.new" %}
+    {% options = !args.last.is_a?(SymbolLiteral) ? args.last : "CallbackChain::Options.new" %}
     {% names = args.select { |arg| arg.is_a?(SymbolLiteral) } %}
 
     {% for name in names %}
@@ -16,18 +15,18 @@ module CarbonSupport::Callbacks
     {% end %}
   end
 
-  macro set_callback(name, type, filter)
+  macro set_callback(name, type, filter, options = Callback::Options.new)
     private def load_{{name.id}}_callbacks
       previous_def.tap do |chain|
         {% if type == :around %}
           around = ->(block : ->) { {{filter.id}}(&block) }
-          callback = Callback::Around.new("{{name.id}}", around)
+          callback = Callback::Around.new("{{name.id}}", around, {{options.id}}, chain.options)
         {% elsif type == :before %}
           before = ->(block : ->) { {{filter.id}} }
-          callback = Callback::Before.new("{{name.id}}", before)
+          callback = Callback::Before.new("{{name.id}}", before, {{options.id}}, chain.options)
         {% elsif type == :after %}
           after = ->(block : ->) { {{filter.id}} }
-          callback = Callback::After.new("{{name.id}}", after)
+          callback = Callback::After.new("{{name.id}}", after, {{options.id}}, chain.options)
         {% end %}
         chain.append(callback)
       end

@@ -1,5 +1,8 @@
 module CarbonSupport::Callbacks
   abstract class Callback
+    class Options
+    end
+
     getter :name, :kind, :block
 
     def duplicates?(other)
@@ -7,7 +10,7 @@ module CarbonSupport::Callbacks
     end
 
     class Before < Callback
-      def initialize(@name, @block)
+      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
         @kind = :before
       end
 
@@ -16,19 +19,33 @@ module CarbonSupport::Callbacks
       end
 
       def call(env : Environment)
-        @block.call ->{}
-        env.value
+        if !env.halted
+          result = @block.call ->{}
+          env.halted = result == false
+          env.value
+          if env.halted
+            puts "halted"
+          end
+        end
+        env
       end
     end
 
     class After < Callback
-      def initialize(@name, @block)
+      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
         @kind = :after
       end
 
       def call(env : Environment)
-        @block.call ->{}
-        env.value
+        if !env.halted || !@chain_options.skip_after_callbacks_if_terminated
+          result = @block.call ->{}
+          env.halted = result == false
+          env.value
+          if env.halted
+            puts "halted"
+          end
+        end
+        env
       end
 
       def apply(sequence)
@@ -37,7 +54,7 @@ module CarbonSupport::Callbacks
     end
 
     class Around < Callback
-      def initialize(@name, @block)
+      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
         @kind = :after
       end
 

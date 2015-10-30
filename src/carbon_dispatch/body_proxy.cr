@@ -24,6 +24,10 @@ module CarbonDispatch
       @body.to_s
     end
 
+    def present?
+      !@body.nil? || @body != ""
+    end
+
     def close
       block = @block
       block.call if block
