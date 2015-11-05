@@ -3,7 +3,7 @@ class CarbonSupport::Callbacks::CallbackChain
     getter :terminator, :if, :unless, :skip_after_callbacks_if_terminated
 
     def initialize(terminator = nil, @if = nil, @unless = nil, @skip_after_callbacks_if_terminated = false)
-      @terminator = terminator || ->(target : Object, result : Object) { false }
+      @terminator = terminator
     end
   end
 

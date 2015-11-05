@@ -1,19 +1,18 @@
 module CarbonDispatch
   class Route
-    macro create(controller, action, pattern)
-      CarbonDispatch::Route.new "{{controller.id.capitalize}}Controller",
+    macro create(controller, action, methods, pattern)
+      CarbonDispatch::Route.new "{{controller.id.camelcase}}Controller",
                                 {{action}},
+                                {{methods}},
                                 {{pattern}},
                                 ->(request : CarbonDispatch::Request, response : CarbonDispatch::Response) {
-        {{controller.id.capitalize}}Controller.action({{action}}, request, response)
+        {{controller.id.camelcase}}Controller.action({{action}}, request, response)
       }
     end
 
-    getter controller
-    getter action
-    getter pattern
+    getter controller, action, methods, pattern
 
-    def initialize(@controller, @action, path, @block)
+    def initialize(@controller, @action, @methods : Array(String), path, @block)
       @params = [] of String
       lparen = path.split(/(\()/)
       rparen = lparen.flat_map { |word| word.split(/(\))/) }
@@ -29,7 +28,9 @@ module CarbonDispatch
       @pattern = Regex.new("^#{pattern}$")
     end
 
-    def match(path)
+    def match(method, path)
+      return false unless @methods.includes?(method)
+
       path = normalize_path(path)
 
       match = path.to_s.match(@pattern)
@@ -55,7 +56,7 @@ module CarbonDispatch
     end
 
     def ==(other)
-      @controller == other.controller && @action == other.action
+      @controller == other.controller && @action == other.action && @methods == other.methods && @pattern == other.pattern
     end
   end
 end
