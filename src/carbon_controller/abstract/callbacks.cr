@@ -1,9 +1,9 @@
 module CarbonController
   module Callbacks
     macro included
-      include CarbonSupport::Callbacks
-      define_callbacks(:process_action, CallbackChain::Options.new(
-                                          terminator: ->(controller : CarbonController::Base) { controller.response.body.present? },
+      include CarbonSupport::Callbacks(CarbonController::Base)
+      define_callbacks(:process_action, CallbackChain::Options(CarbonController::Base).new(
+                                          terminator: ->(controller : CarbonController::Base, result : Bool) { controller.response.body.present? },
                                           skip_after_callbacks_if_terminated: true)
       )
 

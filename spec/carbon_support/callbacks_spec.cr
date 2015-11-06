@@ -2,7 +2,7 @@ require "../spec_helper"
 
 module CarbonSupportTest
   class NormalCallbackTest
-    include CarbonSupport::Callbacks
+    include CarbonSupport::Callbacks(NormalCallbackTest)
 
     getter :callstack
     define_callbacks :test
@@ -59,10 +59,55 @@ module CarbonSupportTest
     end
   end
 
+  class HaltingCallbackTest
+    include CarbonSupport::Callbacks(HaltingCallbackTest)
+    getter :callstack
+    define_callbacks :test
+    define_callbacks(:test_with_terminator, CallbackChain::Options(HaltingCallbackTest).new(
+      terminator: ->(object : HaltingCallbackTest, result : Bool) { object.callstack.size == 1 },
+      skip_after_callbacks_if_terminated: true))
+
+    set_callback :test, :before, :before1
+    set_callback :test, :before, :before2
+    set_callback :test_with_terminator, :before, :before1
+    set_callback :test_with_terminator, :before, :before2
+
+    def initialize
+      @callstack = [] of String
+    end
+
+    def halted_callback_hook
+      callstack << "halted"
+    end
+
+    def test
+      run_callbacks :test do
+        callstack << "test"
+        "result"
+      end
+    end
+
+    def test_with_terminator
+      run_callbacks :test_with_terminator do
+        callstack << "test"
+        "result"
+      end
+    end
+
+    def before1
+      callstack << "before 1"
+    end
+
+    def before2
+      callstack << "before 2"
+      false
+    end
+  end
+
   describe CarbonSupport::Callbacks do
-    context "normal callbacks" do
+    it "normal callbacks" do
       object = NormalCallbackTest.new
-      object.test.should eq "result"
+      result = object.test
       object.callstack.should eq [
         "before 1",
         "around1a",
@@ -75,6 +120,28 @@ module CarbonSupportTest
         "after 1",
         "around1b",
       ]
+      result.should eq "result"
+    end
+
+    it "halting callbacks" do
+      object = HaltingCallbackTest.new
+      result = object.test
+      object.callstack.should eq [
+        "before 1",
+        "before 2",
+        "halted",
+      ]
+      result.should eq false
+    end
+
+    it "halting callbacks" do
+      object = HaltingCallbackTest.new
+      result = object.test_with_terminator
+      object.callstack.should eq [
+        "before 1",
+        "halted",
+      ]
+      result.should eq false
     end
   end
 end

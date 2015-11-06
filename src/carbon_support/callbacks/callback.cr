@@ -1,5 +1,5 @@
 module CarbonSupport::Callbacks
-  abstract class Callback
+  abstract class Callback(T)
     class Options
     end
 
@@ -9,8 +9,8 @@ module CarbonSupport::Callbacks
       false
     end
 
-    class Before < Callback
-      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
+    class Before(T) < Callback(T)
+      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options(T))
         @kind = :before
       end
 
@@ -18,32 +18,30 @@ module CarbonSupport::Callbacks
         sequence.before(self)
       end
 
-      def call(env : Environment)
+      def call(env : Environment(T))
+        halted_lambda = @chain_options.terminator
+        target = env.target
+
         if !env.halted
           result = @block.call ->{}
-          env.halted = result == false
+          env.halted = halted_lambda.call(env.target, result) if halted_lambda
           env.value
-          if env.halted
-            puts "halted"
-          end
+          target.halted_callback_hook if env.halted && target.responds_to?(:halted_callback_hook)
         end
         env
       end
     end
 
-    class After < Callback
-      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
+    class After(T) < Callback(T)
+      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options(T))
         @kind = :after
       end
 
-      def call(env : Environment)
+      def call(env : Environment(T))
         if !env.halted || !@chain_options.skip_after_callbacks_if_terminated
           result = @block.call ->{}
           env.halted = result == false
           env.value
-          if env.halted
-            puts "halted"
-          end
         end
         env
       end
@@ -53,8 +51,8 @@ module CarbonSupport::Callbacks
       end
     end
 
-    class Around < Callback
-      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
+    class Around(T) < Callback(T)
+      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options(T))
         @kind = :after
       end
 
@@ -62,12 +60,10 @@ module CarbonSupport::Callbacks
         sequence.around(self)
       end
 
-      def call(env : Environment, block : ->)
+      def call(env : Environment(T), block : ->)
         @block.call(block)
         env.value
       end
     end
   end
-
-  alias CallbackType = (Callback::Around | Callback::Before | Callback::Around)
 end

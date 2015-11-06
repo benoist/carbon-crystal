@@ -1,9 +1,7 @@
-module CarbonSupport::Callbacks
-  class Environment
-    property :target, :halted, :value, :run_block
+class CarbonSupport::Callbacks::Environment(T)
+  property :target, :halted, :value, :run_block
 
-    def initialize(@target, @halted, @value, &block : -> Object)
-      @run_block = block
-    end
+  def initialize(@target : T, @halted, @value, &block : -> Object)
+    @run_block = block
   end
 end
