@@ -5,7 +5,7 @@ A framework with Rails in mind.
 
 ## Status
 
-Just a POC to see how close we can stay
+Right now it's still alpha stage. I am testing this in production on a small project, but I wouldn't recommend to do it unless you really want to :)
 
 ## TODO
 
