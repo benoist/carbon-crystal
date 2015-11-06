@@ -26,13 +26,13 @@ Just a POC to see how close we can stay
   - [ ] ConditionalGet
   - [ ] ETag
 - [X] Resourceful routing
-- [.] Action filters
+- [X] Action filters
     - [ ] Conditional
     - [X] Halting
 - [ ] Generators
 - [ ] Asset pipeline
 - [ ] View helpers
-- [.] Write specs
+- [X] Write specs
 
 ## Contributing
 
