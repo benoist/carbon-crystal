@@ -25,8 +25,7 @@ module CarbonSupport::Callbacks
         if !env.halted
           result = @block.call ->{}
           env.halted = halted_lambda.call(env.target, result) if halted_lambda
-          env.value
-          target.halted_callback_hook if env.halted && target.responds_to?(:halted_callback_hook)
+          target.halted_callback_hook(@name) if env.halted && target.responds_to?(:halted_callback_hook)
         end
         env
       end
@@ -41,7 +40,6 @@ module CarbonSupport::Callbacks
         if !env.halted || !@chain_options.skip_after_callbacks_if_terminated
           result = @block.call ->{}
           env.halted = result == false
-          env.value
         end
         env
       end
@@ -61,8 +59,10 @@ module CarbonSupport::Callbacks
       end
 
       def call(env : Environment(T), block : ->)
-        @block.call(block)
-        env.value
+        if !env.halted
+          @block.call(block)
+        end
+        env
       end
     end
   end

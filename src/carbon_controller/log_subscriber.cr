@@ -19,6 +19,10 @@ module CarbonController
       end
     end
 
+    def halted_callback(event)
+      info { "Filter chain halted as :#{event.payload.filter} rendered or redirected" }
+    end
+
     attach_to :carbon_controller
   end
 end

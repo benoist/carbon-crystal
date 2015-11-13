@@ -1,4 +1,4 @@
-{% for key in [:view_runtime, :status, :controller, :action, :params, :format, :method, :path] %}
+{% for key in [:view_runtime, :status, :controller, :action, :params, :format, :method, :path, :filter] %}
   CarbonSupport::Notifications::Payload.define_property({{key}})
 {% end %}
 
@@ -25,6 +25,12 @@ module CarbonController
             append_info_to_payload(payload)
           end
         end
+      end
+
+      def halted_callback_hook(filter)
+        raw_payload = CarbonSupport::Notifications::Payload.new
+        raw_payload.filter = filter
+        CarbonSupport::Notifications.instrument("halted_callback.carbon_controller", raw_payload)
       end
     end
 

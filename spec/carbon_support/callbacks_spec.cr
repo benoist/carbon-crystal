@@ -76,8 +76,8 @@ module CarbonSupportTest
       @callstack = [] of String
     end
 
-    def halted_callback_hook
-      callstack << "halted"
+    def halted_callback_hook(filter)
+      callstack << "halted #{filter}"
     end
 
     def test
@@ -129,7 +129,7 @@ module CarbonSupportTest
       object.callstack.should eq [
         "before 1",
         "before 2",
-        "halted",
+        "halted before2",
       ]
       result.should eq false
     end
@@ -139,7 +139,7 @@ module CarbonSupportTest
       result = object.test_with_terminator
       object.callstack.should eq [
         "before 1",
-        "halted",
+        "halted before1",
       ]
       result.should eq false
     end

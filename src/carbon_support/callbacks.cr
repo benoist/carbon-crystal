@@ -8,7 +8,7 @@ require "./callbacks/sequence"
 
 module CarbonSupport::Callbacks(T)
   macro define_callbacks(*args)
-    def halted_callback_hook
+    def halted_callback_hook(filter)
     end
 
     {% options = !args.last.is_a?(SymbolLiteral) ? args.last : "CallbackChain::Options(T).new" %}
@@ -26,13 +26,13 @@ module CarbonSupport::Callbacks(T)
       previous_def.tap do |chain|
         {% if type == :around %}
           around = ->(block : -> ) { !!{{filter.id}}(&block) }
-          callback = Callback::Around(T).new("{{name.id}}", around, {{options.id}}, chain.options)
+          callback = Callback::Around(T).new("{{filter.id}}", around, {{options.id}}, chain.options)
         {% elsif type == :before %}
           before = ->(block : ->) { !!{{filter.id}} }
-          callback = Callback::Before(T).new("{{name.id}}", before, {{options.id}}, chain.options)
+          callback = Callback::Before(T).new("{{filter.id}}", before, {{options.id}}, chain.options)
         {% elsif type == :after %}
           after = ->(block : ->) { !!{{filter.id}} }
-          callback = Callback::After(T).new("{{name.id}}", after, {{options.id}}, chain.options)
+          callback = Callback::After(T).new("{{filter.id}}", after, {{options.id}}, chain.options)
         {% end %}
         chain.append(callback)
       end
