@@ -2,6 +2,13 @@ require "http"
 
 module CarbonDispatch
   class Cookies
+    include Middleware
+
+    def call(request, response)
+      app.call(request, response)
+      request.cookie_jar.write(response.headers)
+    end
+
     # Cookies can typically store 4096 bytes.
     MAX_COOKIE_SIZE = 4096
 

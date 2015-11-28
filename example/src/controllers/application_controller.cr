@@ -5,8 +5,6 @@ class ApplicationController < CarbonController::Base
 
   def index
     @test = session.to_hash.to_json
-    session["user_id"] = "1"
-
     render_template "index"
   end
 

@@ -22,7 +22,7 @@ Right now it's still alpha stage. I am testing this in production on a small pro
   - [X] Head
   - [X] Cookies
   - [X] Sessions Cookie Store
-  - [ ] Flash
+  - [X] Flash
   - [ ] ConditionalGet
   - [ ] ETag
 - [X] Resourceful routing
