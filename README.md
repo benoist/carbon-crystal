@@ -21,7 +21,7 @@ Right now it's still alpha stage. I am testing this in production on a small pro
   - [X] ParamsParser
   - [X] Head
   - [X] Cookies
-  - [ ] Sessions Cookie Store
+  - [X] Sessions Cookie Store
   - [ ] Flash
   - [ ] ConditionalGet
   - [ ] ETag

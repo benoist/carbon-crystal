@@ -4,12 +4,14 @@ class ApplicationController < CarbonController::Base
   after_action :after2
 
   def index
-    @test = "What"
+    @test = session.to_hash.to_json
+    session["user_id"] = "1"
 
-    head 200
+    render_template "index"
   end
 
   def new
+    reset_session
     render_json ["new"]
   end
 

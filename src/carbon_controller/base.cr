@@ -10,6 +10,7 @@ module CarbonController
       end
 
       include CarbonController::Head
+      include CarbonController::Session
       include CarbonController::Cookies
       include CarbonController::Callbacks
       include CarbonController::Instrumentation

@@ -1,3 +1,5 @@
+require "./request/session"
+
 class CarbonDispatch::Request
   getter :request, :path_params
 
@@ -24,6 +26,10 @@ class CarbonDispatch::Request
 
   def params
     @params ||= request_params.merge(path_params.merge(query_params))
+  end
+
+  def session
+    @session ||= Request::Session.new(cookie_jar)
   end
 
   def query_params
