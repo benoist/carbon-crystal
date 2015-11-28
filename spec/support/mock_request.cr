@@ -2,6 +2,10 @@ class MockRequest
   def initialize
   end
 
+  def get(path : String, headers : HTTP::Headers)
+    HTTP::Request.new("GET", path, headers)
+  end
+
   def get(path : String, headers = Hash(String, String | Array(String)).new : Hash(String, String | Array(String)))
     http_headers = HTTP::Headers.new
 

@@ -12,13 +12,17 @@ module CarbonSupport
 
     # Encrypt and sign a message. We need to sign the message in order to avoid
     # padding attacks. Reference: http://www.limited-entropy.com/padding-oracle-attacks.
-    def encrypt_and_sign(value)
+    def encrypt_and_sign(value : Slice(UInt8)) : String
       verifier.generate(_encrypt(value))
+    end
+
+    def encrypt_and_sign(value : String) : String
+      encrypt_and_sign(value.to_slice)
     end
 
     # Decrypt and verify a message. We need to verify the message in order to
     # avoid padding attacks. Reference: http://www.limited-entropy.com/padding-oracle-attacks.
-    def decrypt_and_verify(value)
+    def decrypt_and_verify(value : String) : Slice(UInt8)
       _decrypt(verifier.verify(value))
     end
 
@@ -37,7 +41,7 @@ module CarbonSupport
       "#{::Base64.strict_encode encrypted_data.to_slice}--#{::Base64.strict_encode iv}"
     end
 
-    private def _decrypt(encrypted_message : String)
+    private def _decrypt(encrypted_message)
       cipher = new_cipher
       encrypted_data, iv = encrypted_message.split("--").map { |v| ::Base64.decode(v) }
 
@@ -48,15 +52,8 @@ module CarbonSupport
       decrypted_data = MemoryIO.new
       decrypted_data.write cipher.update(encrypted_data)
       decrypted_data.write cipher.final
-      # def assert_not_verified(value)
-      #   assert_raise(ActiveSupport::MessageVerifier::InvalidSignature) do
-      #     @encryptor.decrypt_and_verify(value)
-      #   end
-      # end
-      JSON.parse([decrypted_data.to_s].to_json)[0] # TODO: find a better way to check string
-
-
-    rescue OpenSSL::Cipher::Error | InvalidByteSequenceError
+      decrypted_data.to_slice
+    rescue OpenSSL::Cipher::Error
       raise InvalidMessage.new
     end
 

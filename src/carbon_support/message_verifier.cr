@@ -7,7 +7,7 @@ module CarbonSupport
     class InvalidSignature < Exception
     end
 
-    def initialize(@secret : String, @digest = :sha1)
+    def initialize(@secret, @digest = :sha1)
     end
 
     def valid_message?(signed_message)

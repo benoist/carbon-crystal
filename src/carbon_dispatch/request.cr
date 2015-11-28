@@ -10,8 +10,16 @@ class CarbonDispatch::Request
     @path_params = Hash(String, String?).new
   end
 
-  def cookies
-    @cookies ||= HTTP::Cookies.from_headers(request.headers)
+  def host
+    uri.host
+  end
+
+  def ssl?
+    uri.scheme == "https"
+  end
+
+  def cookie_jar
+    @cookies ||= CarbonDispatch::Cookies::CookieJar.build(self)
   end
 
   def params
@@ -72,5 +80,9 @@ class CarbonDispatch::Request
 
   private def reject_trusted_ip_addresses(ip_addresses)
     ip_addresses.reject { |ip| trusted_proxy?(ip) }
+  end
+
+  private def uri
+    (@uri ||= URI.parse(@request.resource)).not_nil!
   end
 end

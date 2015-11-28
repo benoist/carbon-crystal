@@ -20,7 +20,7 @@ Right now it's still alpha stage. I am testing this in production on a small pro
   - [X] Exceptions
   - [X] ParamsParser
   - [X] Head
-  - [ ] Cookies
+  - [X] Cookies
   - [ ] Sessions Cookie Store
   - [ ] Flash
   - [ ] ConditionalGet

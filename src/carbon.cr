@@ -30,6 +30,10 @@ module Carbon
     end
   end
 
+  def self.logger=(logger)
+    @@logger = logger
+  end
+
   def self.env
     Environment::Development
   end

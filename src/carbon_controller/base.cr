@@ -9,6 +9,8 @@ module CarbonController
         super
       end
 
+      include CarbonController::Head
+      include CarbonController::Cookies
       include CarbonController::Callbacks
       include CarbonController::Instrumentation
     end

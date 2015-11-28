@@ -4,9 +4,9 @@ class ApplicationController < CarbonController::Base
   after_action :after2
 
   def index
-    @test = "test"
+    @test = "What"
 
-    render_text "index"
+    render_template "index"
   end
 
   def new
