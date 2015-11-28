@@ -2,6 +2,8 @@ class CarbonDispatch::Response
   property :status
   property :headers
   property :body
+  property :location
+  property :content_type
 
   def initialize
     @status = 200

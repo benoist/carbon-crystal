@@ -6,7 +6,7 @@ class ApplicationController < CarbonController::Base
   def index
     @test = "What"
 
-    render_template "index"
+    head 200
   end
 
   def new
