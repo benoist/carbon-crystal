@@ -5,12 +5,13 @@ class ApplicationController < CarbonController::Base
 
   def index
     @test = session.to_hash.to_json
+    cookies["test2"] = Time.now.to_s
+    cookies["test1"] = Time.now.to_s
     render_template "index"
   end
 
   def new
-    reset_session
-    render_json ["new"]
+    render_json cookies.cookies
   end
 
   private def before

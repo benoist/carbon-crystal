@@ -20,16 +20,8 @@ class CarbonDispatch::Request
     uri.scheme == "https"
   end
 
-  def cookie_jar
-    @cookies ||= CarbonDispatch::Cookies::CookieJar.build(self)
-  end
-
   def params
     @params ||= request_params.merge(path_params.merge(query_params))
-  end
-
-  def session
-    @session ||= Request::Session.new(cookie_jar)
   end
 
   def query_params

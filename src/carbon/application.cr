@@ -15,13 +15,14 @@ module Carbon
     end
 
     def initialize!
+      set_key_generator
       set_default_middleware
       app = middleware.build
       @handler = CarbonDispatch::Handler.new(app)
     end
 
     def routes
-      CarbonDispatch::Router
+      @router ||= CarbonDispatch::Router.new
     end
 
     def router=(router)
@@ -49,6 +50,12 @@ module Carbon
       HTTP::Server.new port, [handler]
     end
 
+    private def set_key_generator
+      secrets = (YAML.load(File.read(Carbon.root.join("config/secrets.yml").to_s).to_s) as Hash)[Carbon.env.to_s.downcase] as Hash
+      secret_key_base = ENV["SECRET_KEY_BASE"]? || secrets["secret_key_base"].to_s
+      Carbon.key_generator = CarbonSupport::CachingKeyGenerator.new(CarbonSupport::KeyGenerator.new(secret_key_base, 1000))
+    end
+
     private def set_default_middleware
       middleware.use CarbonDispatch::Sendfile.new "X-Accel-Redirect"
       middleware.use CarbonDispatch::Static.new
@@ -60,7 +67,6 @@ module Carbon
       middleware.use CarbonDispatch::Cookies.new
       middleware.use CarbonDispatch::Session.new
       middleware.use CarbonDispatch::Flash.new
-      # middleware.use CarbonDispatch::ParamsParser.new
     end
   end
 end

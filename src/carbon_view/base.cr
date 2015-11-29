@@ -1,17 +1,13 @@
 module CarbonView
+  macro load_views(view_dir)
+    \{{run("../../src/carbon_view/process", {{ view_dir }}) }}
+  end
+
   class Base
-    @@views = {} of String => Base.class
+    @@views = [] of Base.class
 
     def self.views
       @@views
-    end
-
-    def self.[](template)
-      @@views[template]
-    end
-
-    def self.[]=(template, view)
-      @@views[template] = view
     end
 
     def initialize(@controller)

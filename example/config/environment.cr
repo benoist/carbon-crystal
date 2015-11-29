@@ -2,6 +2,7 @@
 require "./application"
 
 Carbon.root = File.expand_path("../", File.dirname(__FILE__))
+CarbonView.load_views "src/views"
 
 require "../src/**"
 

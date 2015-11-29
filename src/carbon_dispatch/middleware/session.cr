@@ -1,4 +1,10 @@
 module CarbonDispatch
+  class Request
+    def session
+      @session ||= Request::Session.new(cookie_jar)
+    end
+  end
+
   class Session
     include Middleware
 

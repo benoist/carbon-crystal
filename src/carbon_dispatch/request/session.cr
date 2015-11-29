@@ -60,6 +60,8 @@ module CarbonDispatch
 
       def get_cookie
         Hash(String, String).from_json(@cookie_jar.encrypted["_session"] || "{}")
+      rescue e : JSON::ParseException
+        Hash(String, String).new
       end
     end
   end

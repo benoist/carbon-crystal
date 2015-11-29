@@ -41,7 +41,9 @@ module CarbonDispatchTest
     end
   end
 
-  class Router < CarbonDispatch::Router
+  router = CarbonDispatch::Router.new
+
+  router.draw do
     get "/", controller: "test", action: "index"
     get "/new", controller: "test", action: "new"
     post "/", controller: "test", action: "create"
@@ -57,12 +59,11 @@ module CarbonDispatchTest
 
   describe CarbonDispatch::Router do
     it "creates routes" do
-      router = Router.routes
-      router.should be_a(Array(CarbonDispatch::Route))
+      router.routes.should be_a(Array(CarbonDispatch::Route))
     end
 
     it "adds routes" do
-      routes = Router.routes
+      routes = router.routes
       routes[0].should eq CarbonDispatch::Route.create("test", "index", ["GET"], "/")
       routes[1].should eq CarbonDispatch::Route.create("test", "new", ["GET"], "/new")
       routes[2].should eq CarbonDispatch::Route.create("test", "create", ["POST"], "/")
@@ -72,7 +73,7 @@ module CarbonDispatchTest
     end
 
     it "adds resources" do
-      routes = Router.routes
+      routes = router.routes
       routes[6].should eq CarbonDispatch::Route.create("blog_posts", "index", ["GET"], "/blog_posts")
       routes[7].should eq CarbonDispatch::Route.create("blog_posts", "new", ["GET"], "/blog_posts/new")
       routes[8].should eq CarbonDispatch::Route.create("blog_posts", "create", ["POST"], "/blog_posts")
@@ -83,12 +84,12 @@ module CarbonDispatchTest
     end
 
     it "adds resources with only" do
-      routes = Router.routes
+      routes = router.routes
       routes[13].should eq CarbonDispatch::Route.create("test", "index", ["GET"], "/test")
     end
 
     it "adds resources with except" do
-      routes = Router.routes
+      routes = router.routes
       routes[14].should eq CarbonDispatch::Route.create("blog_posts", "index", ["GET"], "/blog_posts")
       routes.size.should eq 15
     end

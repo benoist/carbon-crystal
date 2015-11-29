@@ -13,6 +13,14 @@ module Carbon
     @@application || raise "Application not created"
   end
 
+  def self.key_generator=(key_generator)
+    @@key_generator = key_generator
+  end
+
+  def self.key_generator
+    @@key_generator || raise "Key generator not defined"
+  end
+
   def self.root=(root)
     @@root = FileString.new(root)
   end

@@ -85,7 +85,7 @@ module CarbonDispatch
       cookies.set "user_name", "david", expires: Time.new(2005, 10, 10, 5)
       cookies.set "login", "XJ-122"
       cookies.size.should eq 2
-      cookie_header(cookies).should eq "user_name=david; path=/; expires=Mon, 10 Oct 2005 05:00:00 GMT; login=XJ-122; path=/"
+      cookie_header(cookies).should eq "user_name=david; path=/; expires=Mon, 10 Oct 2005 05:00:00 GMT,login=XJ-122; path=/"
     end
 
     it "sets an encrypted cookie" do

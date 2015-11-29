@@ -1,6 +1,12 @@
 require "http"
 
 module CarbonDispatch
+  class Request
+    def cookie_jar
+      @cookies ||= CarbonDispatch::Cookies::CookieJar.build(self, Carbon.key_generator)
+    end
+  end
+
   class Cookies
     include Middleware
 
@@ -122,7 +128,7 @@ module CarbonDispatch
         cookies = [] of String
         @set_cookies.each { |name, cookie| cookies << cookie.to_set_cookie_header if write_cookie?(cookie) }
         @delete_cookies.each { |name, cookie| cookies << cookie.to_set_cookie_header }
-        headers.add("Set-Cookie", cookies.join("; "))
+        headers.add("Set-Cookie", cookies)
       end
 
       def write_cookie?(cookie)

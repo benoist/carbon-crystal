@@ -25,8 +25,8 @@ module CarbonController
       @_response
     end
 
-    def render_template(template)
-      response.body = CarbonView::Base["#{self.class.to_s}/#{template}"].new(controller = self).to_s
+    macro render_template(template)
+      response.body = CarbonViews::{{ @type.id.gsub(/Controller\+?/, "") }}::{{template.camelcase.id}}.new(controller = self).to_s
       response.headers["Content-Type"] = "text/html"
     end
 

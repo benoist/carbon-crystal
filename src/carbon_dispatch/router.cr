@@ -2,16 +2,9 @@ module CarbonDispatch
   class Router
     include Middleware
 
-    macro inherited
-      begin
-        Carbon.application.router = new(self.routes)
-      rescue
-      end
-    end
-
     getter :routes
 
-    def initialize(@routes)
+    def initialize(@routes = [] of Route)
     end
 
     def call(request, response)
@@ -33,22 +26,12 @@ module CarbonDispatch
       end
     end
 
-    def self.routes
-      @@routes ||= [] of Route
-    end
-
-    def self.views
-      @@views ||= [] of String
+    def draw
+      with self yield
     end
 
     macro action(methods, path, controller = nil, action = nil)
-      class ::Views::{{controller.id.camelcase}}::{{action.id.camelcase}} < CarbonView::Base
-        ecr_file "src/views/{{controller.id}}/{{action.id}}.html.ecr"
-      end
-
-      CarbonView::Base["{{controller.id.camelcase}}Controller/{{action.id}}"] = ::Views::{{controller.id.camelcase}}::{{action.id.camelcase}}
-
-      self.routes << CarbonDispatch::Route.create({{controller}}, {{action}}, {{methods}}, {{path}})
+      routes << CarbonDispatch::Route.create({{controller}}, {{action}}, {{methods}}, {{path}})
     end
 
     macro get(path, controller = nil, action = nil)
