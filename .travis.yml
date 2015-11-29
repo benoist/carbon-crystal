@@ -1,6 +1,4 @@
 language: crystal
-sudo: required
-dist: trusty
 crystal:
   - latest
   - nightly
