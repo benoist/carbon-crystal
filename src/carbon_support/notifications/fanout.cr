@@ -67,7 +67,6 @@ module CarbonSupport
           elsif listener.responds_to?(:call)
             Timed.new pattern, listener
           else
-            puts listener
             raise "Invalid listener"
           end
         end

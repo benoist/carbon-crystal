@@ -1,6 +1,6 @@
 module CarbonView
-  macro load_views(view_dir)
-    \{{run("../../src/carbon_view/process", {{ view_dir }}) }}
+  macro load_views(view_dir, processor = "carbon_view/process")
+    \{{run({{processor}}, {{ view_dir }}) }}
   end
 
   class Base

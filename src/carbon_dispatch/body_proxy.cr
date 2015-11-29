@@ -25,8 +25,6 @@ module CarbonDispatch
     end
 
     def present?
-      puts "body"
-      p !@body.nil? && @body != ""
       !@body.nil? && @body != ""
     end
 
