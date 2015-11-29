@@ -9,6 +9,10 @@ A framework with Rails in mind.
 
 Right now it's still alpha stage. I am testing this in production on a small project, but I wouldn't recommend to do it unless you really want to :)
 
+## Release goal
+
+For the first release I'm aiming towards a 15 min blog post screencast.
+
 ## TODO
 
 - [X] Notifications (ActiveSupport like)
