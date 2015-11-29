@@ -4,4 +4,4 @@ crystal:
   - nightly
 matrix:
   allow_failures:
-    - crystal: nightly
+    - crystal: latest
