@@ -10,3 +10,6 @@ example/server
 /worksheet.cr
 carbon
 .idea/
+Gemfile
+Gemfile.lock
+middlewares.txt
