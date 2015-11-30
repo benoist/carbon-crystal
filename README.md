@@ -6,6 +6,7 @@ A framework with Rails in mind.
 ## Status
 
 [![Build Status](https://travis-ci.org/benoist/carbon-crystal.svg?branch=master)](https://travis-ci.org/benoist/carbon-crystal)
+Only works on latest master. To use locally build it from source or on osx use brew install crystal-lang --HEAD.
 
 Right now it's still alpha stage. I am testing this in production on a small project, but I wouldn't recommend to do it unless you really want to :)
 
