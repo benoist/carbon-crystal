@@ -13,3 +13,4 @@ carbon
 Gemfile
 Gemfile.lock
 middlewares.txt
+test.log
