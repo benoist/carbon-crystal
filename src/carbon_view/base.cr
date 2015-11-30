@@ -18,3 +18,7 @@ module CarbonView
     end
   end
 end
+
+require "./view"
+require "./layout"
+require "./partial"

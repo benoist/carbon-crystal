@@ -1,4 +1,4 @@
 module CarbonView
-  class Html < Base
+  class View < Base
   end
 end

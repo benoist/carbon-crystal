@@ -5,11 +5,20 @@ output = [] of String
 
 Dir.cd(view_dir) do
   Dir["**/*.ecr"].each do |f|
-    namespaces = File.dirname(f).split("/").map(&.camelcase).join("::")
-
     file_name = File.basename(f, ".ecr")
-    view_type = File.extname(file_name)[1..-1].camelcase
+
+    namespaces = File.dirname(f).split("/").map(&.camelcase).join("::")
     view_name = File.basename(file_name, File.extname(file_name)).camelcase
+
+    if view_name.starts_with?("_")
+      view_type = "Partial"
+    else
+      if namespaces.starts_with?("Layouts")
+        view_type = "Layout"
+      else
+        view_type = "View"
+      end
+    end
 
     output << <<-RUBY
       class CarbonViews::#{namespaces}::#{view_name} < CarbonView::#{view_type}
