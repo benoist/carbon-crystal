@@ -2,7 +2,7 @@
 require "./application"
 
 Carbon.root = File.expand_path("../", File.dirname(__FILE__))
-CarbonView.load_views "/Users/benoist/Dropbox/rails/crystal/carbon/example/src/views", "../../src/carbon_view/process"
+CarbonView.load_views "src/views", "../../src/carbon_view/process"
 
 require "../src/**"
 
