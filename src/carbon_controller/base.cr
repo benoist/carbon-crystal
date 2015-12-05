@@ -4,6 +4,10 @@ module CarbonController
   class Base < Metal
     delegate :params, :request
 
+    def self.layout(layout = nil)
+      @@layout ||= layout
+    end
+
     macro inherited
       def process_action(name, block)
         super
@@ -26,7 +30,10 @@ module CarbonController
     end
 
     macro render_template(template)
-      response.body = CarbonViews::{{ @type.id.gsub(/Controller\+?/, "") }}::{{template.camelcase.id}}.new(controller = self).to_s
+      layout = CarbonView::Base.layouts["Layouts::{{ @type.id.gsub(/Controller\+?/, "") }}"].new(controller = self)
+      view = CarbonViews::{{ @type.id.gsub(/Controller\+?/, "") }}::{{template.camelcase.id}}.new(controller = self)
+
+      response.body = layout.render(view)
       response.headers["Content-Type"] = "text/html"
     end
 

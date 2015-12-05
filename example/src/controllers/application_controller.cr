@@ -1,4 +1,6 @@
 class ApplicationController < CarbonController::Base
+  layout "application"
+
   before_action :before
   around_action :around
   after_action :after2

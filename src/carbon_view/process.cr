@@ -26,9 +26,13 @@ Dir.cd(view_dir) do
           #{ECR.process_file(f, "__io__")}
         end
       end
-
-      CarbonView::Base.views << CarbonViews::#{namespaces}::#{view_name}
     RUBY
+
+    if view_type == "Layout"
+      output << %(CarbonView::Base.layouts["#{namespaces}::#{view_name}"] = CarbonViews::#{namespaces}::#{view_name})
+    else
+      output << %(CarbonView::Base.views["#{namespaces}::#{view_name}"] = CarbonViews::#{namespaces}::#{view_name})
+    end
   end
 end
 
