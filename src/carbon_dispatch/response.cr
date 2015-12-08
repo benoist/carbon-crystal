@@ -24,4 +24,14 @@ class CarbonDispatch::Response
   def body=(body : String)
     @body = BodyProxy.new(body)
   end
+
+  def location=(url : String)
+    @location = url
+    @headers["Location"] = url
+  end
+
+  def content_type=(mime : String)
+    @content_type = mime
+    @headers["Content-Type"] = mime
+  end
 end
