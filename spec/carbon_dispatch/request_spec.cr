@@ -1,6 +1,362 @@
 require "../spec_helper"
 
 describe CarbonDispatch::Request do
+  context "#scheme" do
+    it "contains the scheme information" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/")
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("http")
+
+      http_request = mock_http_request.get("/", {"HTTPS": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("http")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:8080"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("http")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com", "HTTPS": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:8443", "HTTPS": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+    end
+
+    it "supports forwarded scheme information by proxies" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_SSL": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com", "HTTP_X_FORWARDED_SSL": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:8443", "HTTP_X_FORWARDED_SSL": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_SCHEME": "https"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com", "HTTP_X_FORWARDED_SCHEME": "https"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:8443", "HTTP_X_FORWARDED_SCHEME": "https"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_PROTO": "https"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_PROTO": "https, http, http"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_PROTO": ["https", "http", "http"]})
+      request = CarbonDispatch::Request.new(http_request)
+      request.scheme.should eq("https")
+    end
+  end
+
+  context "#port" do
+    it "contains the port information" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/")
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(80)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:8080"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(8080)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(80)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+
+      http_request = mock_http_request.get("/", {"SERVER_NAME": "example.org", "SERVER_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:9292", "SERVER_NAME": "example.com", "SERVER_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+    end
+
+    it "supports forwarded port information by proxies" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost", "HTTP_X_FORWARDED_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(92)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com", "HTTP_X_FORWARDED_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com:9595", "HTTP_X_FORWARDED_PORT": "9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9595)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(80)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com:9292"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(80)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com:9292", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(9292)
+    end
+
+    it "derives the port information based on the scheme" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com", "HTTP_X_FORWARDED_SSL": "on"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com", "HTTP_X_FORWARDED_SCHEME": "https"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com", "HTTP_X_FORWARDED_PROTO": "https"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_HOST": "example.com", "HTTP_X_FORWARDED_PROTO": "https, http, http"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_SSL": "on", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_SCHEME": "https", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_PROTO": "https", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:92", "HTTP_X_FORWARDED_PROTO": "https, http, http", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.port.should eq(443)
+    end
+  end
+
+  context "#host_with_port" do
+    it "returns the #host without the #port, with a #standard_port?" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:443"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost", "HTTP_X_FORWARDED_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost", "HTTP_X_FORWARDED_HOST": "example.com:80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost", "HTTP_X_FORWARDED_HOST": "example.com:443"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:8080", "HTTP_X_FORWARDED_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("example.com")
+    end
+
+    it "returns the #host with the #port, without a #standard_port?" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:9393"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("localhost:9393")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost", "HTTP_X_FORWARDED_HOST": "example.com:9393"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("example.com:9393")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "localhost:93", "HTTP_X_FORWARDED_HOST": "example.com:9393"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host_with_port.should eq("example.com:9393")
+    end
+  end
+
+  context "#host and #raw_host_with_port" do
+    it "contains the host information" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("localhost")
+      request.raw_host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost:80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("localhost")
+      request.raw_host_with_port.should eq("localhost:80")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost:94"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("localhost")
+      request.raw_host_with_port.should eq("localhost:94")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "example.com:80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:80")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "example.com:94"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:94")
+
+      http_request = mock_http_request.get("/", {"SERVER_NAME": "example.com", "SERVER_PORT": "80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:80")
+
+      http_request = mock_http_request.get("/", {"SERVER_NAME": "example.com", "SERVER_PORT": "94"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:94")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost", "HTTP_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("localhost")
+      request.raw_host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost", "SERVER_NAME": "example.com", "SERVER_PORT": "94"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("localhost")
+      request.raw_host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost", "HTTP_HOST": "www.example.com:94", "SERVER_NAME": "example.com", "SERVER_PORT": "94"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("localhost")
+      request.raw_host_with_port.should eq("localhost")
+
+      http_request = mock_http_request.get("/", {"HTTP_HOST": "www.example.com:94", "SERVER_NAME": "example.com", "SERVER_PORT": "94"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("www.example.com")
+      request.raw_host_with_port.should eq("www.example.com:94")
+    end
+
+    it "supports forwarded host information by proxies" do
+      mock_http_request = MockRequest.new
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": "example.com:80"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:80")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": "example.com:9494"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:9494")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost", "HTTP_X_FORWARDED_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost:80", "HTTP_X_FORWARDED_HOST": "example.com:8080"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:8080")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost", "HTTP_HOST": "example.com:8080", "HTTP_X_FORWARDED_HOST": "example.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com")
+
+      http_request = mock_http_request.get("/", {"HOST": "localhost", "HTTP_HOST": "example.com", "HTTP_X_FORWARDED_HOST": "example.com:8080"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:8080")
+
+      http_request = mock_http_request.get("/", {"SERVER_NAME": "example.com", "SERVER_PORT": "80", "HTTP_X_FORWARDED_HOST": "example.com:8080"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example.com")
+      request.raw_host_with_port.should eq("example.com:8080")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": "example1.com, example2.com, example3.com"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example3.com")
+      request.raw_host_with_port.should eq("example3.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": ["example1.com", "example2.com", "example3.com"]})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example3.com")
+      request.raw_host_with_port.should eq("example3.com")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": "example1.com:80, example2.com:8080, example3.com:9494"})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example3.com")
+      request.raw_host_with_port.should eq("example3.com:9494")
+
+      http_request = mock_http_request.get("/", {"HTTP_X_FORWARDED_HOST": ["example1.com:80", "example2.com:8080", "example3.com:9494"]})
+      request = CarbonDispatch::Request.new(http_request)
+      request.host.should eq("example3.com")
+      request.raw_host_with_port.should eq("example3.com:9494")
+    end
+  end
+
   context "#ip" do
     it "contains the IP information" do
       mock_http_request = MockRequest.new

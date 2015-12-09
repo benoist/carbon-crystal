@@ -15,6 +15,14 @@ class ApplicationController < CarbonController::Base
     render_json cookies.cookies
   end
 
+  def redirect_to_new
+    redirect_to "/new"
+  end
+
+  def redirect_to_google
+    redirect_to "http://www.google.com"
+  end
+
   private def before
     Carbon.logger.debug "Before action"
   end
