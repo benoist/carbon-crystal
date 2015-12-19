@@ -1,16 +1,23 @@
 module CarbonController
   module Callbacks
+    class ResponseTerminator
+      def terminate?(target, result)
+        target.response.body.present? if target.is_a?(CarbonController::Base)
+      end
+    end
+
     macro included
-      include CarbonSupport::Callbacks(CarbonController::Base)
-      define_callbacks(:process_action, CallbackChain::Options(CarbonController::Base).new(
-                                          terminator: ->(controller : CarbonController::Base, result : Bool) { controller.response.body.present? },
+      include CarbonSupport::Callbacks
+      define_callbacks(:process_action, CallbackChain::Options.new(
+                                          terminator: ResponseTerminator.new,
                                           skip_after_callbacks_if_terminated: true)
       )
+    end
 
-      def process_action(name, block)
-        run_callbacks(:process_action) do
-          previous_def
-        end
+    def process_action(name, block)
+      run_callbacks(:process_action) do
+        super
+        true
       end
     end
 

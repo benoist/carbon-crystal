@@ -1,25 +1,34 @@
-class CarbonSupport::Callbacks::CallbackChain(T)
-  class Options(T)
+class CarbonSupport::Callbacks::CallbackChain
+  class Options
+    class BoolTerminator
+      def terminate?(target, result)
+        !result
+      end
+    end
+
     getter :terminator, :if, :unless, :skip_after_callbacks_if_terminated
 
     def initialize(terminator = nil, @if = nil, @unless = nil, @skip_after_callbacks_if_terminated = false)
       if terminator
         @terminator = terminator
       else
-        @terminator = ->(x : T, result : Bool) { !result }
+        @terminator = BoolTerminator.new
       end
     end
   end
 
   getter :name, :options
 
-  def initialize(name, @options : Options(T))
-    @name = name
-    @chain = [] of (Callback::Around(T) | Callback::Before(T) | Callback::After(T))
+  def initialize(@name, @options = Options.new)
+    @chain = [] of Callback
+  end
+
+  def append(callback : Callback)
+    @chain.push(callback)
   end
 
   def compile
-    final_sequence = CallbackSequence(T).new ->(environment : Environment(T)) do
+    final_sequence = CallbackSequence.new ->(environment : Environment) do
       block = environment.run_block
       environment.value = !environment.halted && (!block || block.call)
       environment

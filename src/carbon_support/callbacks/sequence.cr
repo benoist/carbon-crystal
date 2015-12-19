@@ -1,7 +1,7 @@
-class CarbonSupport::Callbacks::CallbackSequence(T)
-  def initialize(@block : Environment(T) ->)
-    @before = [] of Callback::Before(T)
-    @after = [] of Callback::After(T)
+class CarbonSupport::Callbacks::CallbackSequence
+  def initialize(@block : Environment ->)
+    @before = [] of Callback::Before
+    @after = [] of Callback::After
   end
 
   def before(callback)
@@ -15,7 +15,7 @@ class CarbonSupport::Callbacks::CallbackSequence(T)
   end
 
   def around(callback)
-    CallbackSequence(T).new ->(environment : Environment(T)) do
+    CallbackSequence.new ->(environment : Environment) do
       proc = ->{ self.call(environment) }
       callback.call(environment, proc)
     end

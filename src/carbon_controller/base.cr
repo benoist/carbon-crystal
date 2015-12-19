@@ -8,19 +8,13 @@ module CarbonController
       @@layout ||= layout
     end
 
-    macro inherited
-      def process_action(name, block)
-        super
-      end
-
-      include CarbonController::Head
-      include CarbonController::Redirect
-      include CarbonController::Session
-      include CarbonController::Cookies
-      include CarbonController::Flash
-      include CarbonController::Callbacks
-      include CarbonController::Instrumentation
-    end
+    include Head
+    include Redirect
+    include Session
+    include Cookies
+    include Flash
+    include CarbonController::Callbacks
+    include Instrumentation
 
     def request
       @_request
