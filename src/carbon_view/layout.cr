@@ -1,5 +1,5 @@
 module CarbonView
-  class Layout < Base
+  class Layout < View
     def render(view)
       String.build do |io|
         to_s io do

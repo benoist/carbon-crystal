@@ -3,6 +3,9 @@ module CarbonView
   end
 end
 
+require "./buffers"
+require "./helpers"
+require "./context"
 require "./view"
 require "./layout"
 require "./partial"
@@ -13,6 +16,9 @@ module CarbonView
   end
 
   class Base
+    include Context
+    include Helpers
+
     @@views = {} of String => View.class
     @@layouts = {} of String => Layout.class
 
@@ -24,12 +30,14 @@ module CarbonView
       @@layouts
     end
 
-    def initialize(@controller)
+    def initialize(@controller = nil)
     end
 
     macro method_missing(name)
-      controller = @controller
-      controller.try(&.{{name.id}}) if controller.responds_to?(:{{name.id}})
+      {% if name.is_a?(StringLiteral) %}
+        controller = @controller
+        controller.try(&.{{name.id}}) if controller.responds_to?(:{{name.id}})
+      {% end %}
     end
   end
 end
