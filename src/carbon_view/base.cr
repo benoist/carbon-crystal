@@ -3,9 +3,7 @@ module CarbonView
   end
 end
 
-require "./buffers"
 require "./helpers"
-require "./context"
 require "./view"
 require "./layout"
 require "./partial"
@@ -16,7 +14,6 @@ module CarbonView
   end
 
   class Base
-    include Context
     include Helpers
 
     @@views = {} of String => View.class
