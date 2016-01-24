@@ -33,7 +33,7 @@ module CarbonController
     end
 
     def render_text(text)
-      response.body = text.to_slice
+      response.body = text
       response.headers["Content-Type"] = "text/plain"
     end
 
