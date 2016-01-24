@@ -42,7 +42,7 @@ module CarbonDispatch
       begin
         @exception_app.call(exception, request, response)
       rescue e : Exception
-        response.status = 500
+        response.status_code = 500
         response.headers["Content-Type"] = "text/plain"
         response.body = "500 Internal server error"
       end

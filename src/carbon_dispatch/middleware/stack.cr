@@ -1,7 +1,7 @@
 module CarbonDispatch
   module Middleware
     def call(request : Request, response : Response)
-      app.call(request)
+      app.call(request, response)
     end
 
     def build(app)
@@ -10,7 +10,7 @@ module CarbonDispatch
     end
 
     def app
-      @app || raise "App not defined"
+      @app || raise "App not defined: #{self.class}"
     end
   end
 

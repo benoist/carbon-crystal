@@ -33,7 +33,7 @@ class CarbonSupport::Callbacks::CallbackChain
       environment.value = !environment.halted && (!block || block.call)
       environment
     end
-    @callbacks ||= @chain.reverse.inject(final_sequence) do |callback_sequence, callback|
+    @callbacks ||= @chain.reverse.reduce(final_sequence) do |callback_sequence, callback|
       callback.apply callback_sequence
     end
   end

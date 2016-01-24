@@ -7,9 +7,9 @@ module CarbonDispatch
       when "GET", "HEAD"
         file_path = Carbon.root.join("public", request.path).to_s
         if File.file?(file_path)
-          response.status = 200
-          response.headers = HTTP::Headers{"Content-Type": mime_type(file_path)}
-          response.body = BodyProxy.new(File.read(file_path))
+          response.status_code = 200
+          response.headers["Content-Type"] = mime_type(file_path)
+          response.body = File.read(file_path)
 
           return
         end

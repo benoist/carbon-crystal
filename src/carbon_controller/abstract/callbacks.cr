@@ -2,7 +2,7 @@ module CarbonController
   module Callbacks
     class ResponseTerminator
       def terminate?(target, result)
-        target.response.body.present? if target.is_a?(CarbonController::Base)
+        target.response.rendered? if target.is_a?(CarbonController::Base)
       end
     end
 

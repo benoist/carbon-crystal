@@ -12,9 +12,8 @@ module CarbonController
       raise CarbonControllerError.new("Cannot redirect to nil!") if options.nil?
       raise CarbonControllerError.new("Cannot redirect to a parameter hash!") if options.is_a?(HTTP::Params)
 
-      response.status = _extract_redirect_to_status(options, response_status)
+      response.status_code = _extract_redirect_to_status(options, response_status)
       response.location = _compute_redirect_to_location(request, options)
-      response.body = ""
     end
 
     private def _compute_redirect_to_location(request, options) # :nodoc:

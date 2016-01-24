@@ -4,7 +4,6 @@ module CarbonController
       response.status = status
       response.location = location if location
       response.content_type = content_type if content_type
-      response.body = ""
 
       if include_content?(status)
         response.content_type = content_type # || (Mime[formats.first] if formats)

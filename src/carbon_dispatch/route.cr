@@ -36,7 +36,7 @@ module CarbonDispatch
       match = path.to_s.match(@pattern)
 
       if match
-        @params.inject({} of String => String?) { |hash, param| hash[param] = match[param]?; hash }
+        @params.reduce({} of String => String?) { |hash, param| hash[param] = match[param]?; hash }
       else
         false
       end

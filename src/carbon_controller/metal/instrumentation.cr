@@ -18,7 +18,7 @@ module CarbonController
       CarbonSupport::Notifications.instrument("process_action.carbon_controller", raw_payload) do |payload|
         begin
           result = super
-          payload.status = response.status
+          payload.status = response.status_code
           result
         ensure
           append_info_to_payload(payload)

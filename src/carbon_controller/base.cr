@@ -20,7 +20,7 @@ module CarbonController
       @_request
     end
 
-    def response
+    def response : CarbonDispatch::Response
       @_response
     end
 
@@ -33,7 +33,7 @@ module CarbonController
     end
 
     def render_text(text)
-      response.body = text
+      response.body = text.to_slice
       response.headers["Content-Type"] = "text/plain"
     end
 

@@ -38,7 +38,7 @@ module Carbon
     end
 
     def run
-      server = create_server("127.0.0.1", 3000)
+      server = create_server(ENV["BIND"]? || "::1", 3000)
       server.listen
     end
 
@@ -47,7 +47,7 @@ module Carbon
       raise "Application not initialized!" unless handler
       Carbon.logger.info "Carbon #{Carbon::VERSION} application starting in #{Carbon.env} on http://#{ip}:#{port}"
 
-      HTTP::Server.new port, [handler]
+      HTTP::Server.new(ip, port, [handler])
     end
 
     private def set_key_generator

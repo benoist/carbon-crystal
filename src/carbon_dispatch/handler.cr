@@ -3,14 +3,12 @@ module CarbonDispatch
     def initialize(@app : Middleware)
     end
 
-    def call(request : HTTP::Request) : HTTP::Response
+    def call(context : HTTP::Server::Context)
       # env = CarbonDispatch::Environment.new(request)
-      request = Request.new(request)
-      response = Response.new
+      request = Request.new(context.request)
+      response = Response.new(context.response)
       @app.call(request, response)
-
-      # HTTP::Response.new(response.status, body.to_s, headers).tap { body.close }
-      response.to_http_response
+      response.finish
     end
   end
 end

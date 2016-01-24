@@ -27,8 +27,9 @@ module CarbonSupport
         pattern = "{{event}}.#{@@namespace}"
 
         # don't add multiple subscribers (eg. if methods are redefined)
-        unless @@subscriber.patterns.includes?(pattern)
-          @@subscriber.patterns << pattern
+        patterns = @@subscriber.patterns.not_nil!
+        unless patterns.includes?(pattern)
+          patterns << pattern
           @@subscriber.callers[pattern] = ->(e : CarbonSupport::Notifications::Event) { @@subscriber.{{event}}(e) }
           @@notifier.subscribe(pattern, @@subscriber)
         end

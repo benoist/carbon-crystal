@@ -6,8 +6,7 @@ module CarbonDispatch
       app.call(request, response)
 
       if request.method == "HEAD"
-        response.body.close
-        response.body = BodyProxy.new("")
+        response.close
       end
     end
   end

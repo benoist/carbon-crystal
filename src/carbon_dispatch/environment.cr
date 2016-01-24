@@ -5,7 +5,7 @@ module CarbonDispatch
     property :request_id
     property :ip
 
-    @request :: ::HTTP::Request
+    @request : ::HTTP::Request
 
     def initialize(@request)
       @errors = STDOUT

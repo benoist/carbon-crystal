@@ -1,37 +1,59 @@
-class CarbonDispatch::Response
-  property :status
-  property :headers
-  property :body
-  property :location
-  property :content_type
+module CarbonDispatch
+  class Response
+    delegate :headers, @response
+    delegate "status_code=", @response
+    delegate "status_code", @response
+    delegate "close", @response
 
-  def initialize
-    @status = 200
-    @headers = HTTP::Headers.new
-    @body = BodyProxy.new(nil)
-    @callbacks = [] of ->
-  end
+    property :path
 
-  def to_http_response
-    @callbacks.map { |callback| callback.call }
-    HTTP::Response.new(status, body.to_s, headers)
-  end
+    def initialize
+      io = MemoryIO.new
+      @response = HTTP::Server::Response.new(io)
+      @rendered = false
+      @path = ""
+      @body = ""
+      @callbacks = [] of ->
+    end
 
-  def register_callback(&block)
-    @callbacks << block
-  end
+    def initialize(@response : HTTP::Server::Response)
+      @rendered = false
+      @path = ""
+      @body = ""
+      @callbacks = [] of ->
+    end
 
-  def body=(body : String)
-    @body = BodyProxy.new(body)
-  end
+    def finish
+      @callbacks.map { |callback| callback.call }
+    end
 
-  def location=(url : String)
-    @location = url
-    @headers["Location"] = url
-  end
+    def register_callback(&block)
+      @callbacks << block
+    end
 
-  def content_type=(mime : String)
-    @content_type = mime
-    @headers["Content-Type"] = mime
+    def is_path?
+      @path && File.exists?(@path)
+    end
+
+    def location=(location)
+      @response.headers["Location"] = location
+    end
+
+    def location
+      @response.headers["Location"]
+    end
+
+    def body
+      @body
+    end
+
+    def body=(@body : String)
+      @rendered = true
+      @response.write(@body.to_slice)
+    end
+
+    def rendered?
+      @rendered
+    end
   end
 end

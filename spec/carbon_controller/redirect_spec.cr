@@ -54,7 +54,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_relative_path
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://test.host/foo")
       response.body.to_s.should eq("")
     end
@@ -67,7 +67,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_relative_path
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://test.host:8888/foo")
       response.body.to_s.should eq("")
     end
@@ -80,7 +80,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_url
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://www.example.com")
       response.body.to_s.should eq("")
     end
@@ -93,7 +93,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_url_with_status_hash
 
-      response.status.should eq(308)
+      response.status_code.should eq(308)
       response.location.should eq("http://www.example.com")
       response.body.to_s.should eq("")
     end
@@ -106,7 +106,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_to_url_with_unescaped_query_string
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://example.com/query?status=new")
       response.body.to_s.should eq("")
     end
@@ -119,7 +119,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_to_url_with_complex_scheme
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("x-test+scheme.complex:redirect")
       response.body.to_s.should eq("")
     end
@@ -132,7 +132,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_back
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://www.example.com/hello_world")
       response.body.to_s.should eq("")
     end
@@ -145,7 +145,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_with_header_break
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://test.host/lolwat")
       response.body.to_s.should eq("")
     end
@@ -158,7 +158,7 @@ describe CarbonController::Redirect do
       controller = CarbonControllerTest::RedirectTestController.new(request, response)
       controller.redirect_with_null_bytes
 
-      response.status.should eq(302)
+      response.status_code.should eq(302)
       response.location.should eq("http://www.example.com/lolwat")
       response.body.to_s.should eq("")
     end

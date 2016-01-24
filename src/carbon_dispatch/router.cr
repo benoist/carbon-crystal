@@ -21,7 +21,7 @@ module CarbonDispatch
       if action
         action.call(request, response)
       else
-        response.status = 404
+        response.status_code = 404
         response.body = "Not Found"
       end
     end
