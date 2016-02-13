@@ -5,7 +5,7 @@ authors:
   - Benoist Claassen <benoist.claassen@gmail.com>
 
 dependencies:
-  duktape.cr:
+  duktape:
     github: jessedoyle/duktape.cr
     version: ~> 0.6.2
 
