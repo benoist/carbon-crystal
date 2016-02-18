@@ -1,7 +1,7 @@
 module CarbonDispatch
   class ShowExceptions
     class ExceptionApp
-      ecr_file __DIR__ + "/templates/exception.html.ecr"
+      ECR.def_to_s __DIR__ + "/templates/exception.html.ecr"
 
       def call(exception, request, response)
         @exception = exception

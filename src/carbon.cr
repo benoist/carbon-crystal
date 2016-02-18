@@ -1,8 +1,13 @@
 module Carbon
-  enum Environment
-    Development
-    Test
-    Production
+  struct Environment
+    def initialize(@env)
+    end
+
+    {% for env in ["development", "test", "production"] %}
+      def {{env.id}}?
+        @env == {{env}}
+      end
+    {% end %}
   end
 
   def self.application=(app)
@@ -43,6 +48,6 @@ module Carbon
   end
 
   def self.env
-    Environment::Development
+    @@env = Environment.new(ENV["CARBON_ENV"])
   end
 end

@@ -51,7 +51,7 @@ module Carbon
     end
 
     private def set_key_generator
-      secrets = (YAML.load(File.read(Carbon.root.join("config/secrets.yml").to_s).to_s) as Hash)[Carbon.env.to_s.downcase] as Hash
+      secrets = (YAML.parse(File.read(Carbon.root.join("config/secrets.yml").to_s).to_s) as Hash)[Carbon.env.to_s.downcase] as Hash
       secret_key_base = ENV["SECRET_KEY_BASE"]? || secrets["secret_key_base"].to_s
       Carbon.key_generator = CarbonSupport::CachingKeyGenerator.new(CarbonSupport::KeyGenerator.new(secret_key_base, 1000))
     end

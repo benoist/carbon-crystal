@@ -25,7 +25,7 @@ Dir.cd(view_dir) do
         def to_s(__io__)
           #{ECR.process_file(f, "__io__")}
         end
-      end
+     end
     }
 
     if view_type == "Layout"

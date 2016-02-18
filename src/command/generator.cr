@@ -25,7 +25,7 @@ module Carbon
 
     macro template(name, template_path, full_path)
       class {{name.id}} < Carbon::Generator::View
-        ecr_file "{{TEMPLATE_DIR.id}}/{{template_path.id}}"
+        ECR.def_to_s "{{TEMPLATE_DIR.id}}/{{template_path.id}}"
         def full_path
           "#{config.dir}/#{{{full_path}}}"
         end
