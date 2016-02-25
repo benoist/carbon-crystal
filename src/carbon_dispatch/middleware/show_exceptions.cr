@@ -61,7 +61,7 @@ module CarbonDispatch
     end
 
     def log(message)
-      Carbon.logger.error(message)
+      Carbon.logger.error(message.to_s)
     end
   end
 end
