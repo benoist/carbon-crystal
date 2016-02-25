@@ -27,6 +27,7 @@ module CarbonDispatch
 
     def initialize(exception_app = nil)
       super()
+      @reference = SecureRandom.uuid
       @exception_app = exception_app || ExceptionApp.new
     end
 
@@ -34,7 +35,13 @@ module CarbonDispatch
       begin
         app.call(request, response)
       rescue e : Exception
-        render_exception(e, request, response)
+        log "Reference: #{@reference}"
+        log e.message
+        if Carbon.env.development?
+          render_exception(e, request, response)
+        else
+          render_fallback(response)
+        end
       end
     end
 
@@ -42,10 +49,19 @@ module CarbonDispatch
       begin
         @exception_app.call(exception, request, response)
       rescue e : Exception
-        response.status_code = 500
-        response.headers["Content-Type"] = "text/plain"
-        response.body = "500 Internal server error"
+        log e.message
+        render_fallback(response)
       end
+    end
+
+    def render_fallback(response)
+      response.status_code = 500
+      response.headers["Content-Type"] = "text/plain"
+      response.body = "500 Internal server error. Reference #{@reference}"
+    end
+
+    def log(message)
+      Carbon.logger.error(message)
     end
   end
 end

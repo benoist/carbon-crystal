@@ -8,6 +8,10 @@ module Carbon
         @env == {{env}}
       end
     {% end %}
+
+    def to_s(io : IO)
+      @env.to_s(io)
+    end
   end
 
   def self.application=(app)
@@ -39,8 +43,29 @@ module Carbon
       logger.formatter = Logger::Formatter.new do |severity, datetime, progname, message, io|
         io << message
       end
-      logger.level = env.development? ? Logger::DEBUG : Logger::INFO
+      logger.level = log_level
     end
+  end
+
+  def self.log_level
+    @@log_level ||= env.development? ? Logger::DEBUG : Logger::INFO
+  end
+
+  def self.log_level=(level : Logger::Severity)
+    @@log_level = level
+    puts "LogLevel set to: #{level}"
+    logger.level = level
+  end
+
+  def self.log_level=(level : String)
+    self.log_level = case level.upcase
+                     when "ERROR"
+                       Logger::ERROR
+                     when "INFO"
+                       Logger::INFO
+                     else
+                       Logger::DEBUG
+                     end
   end
 
   def self.logger=(logger)
@@ -48,6 +73,6 @@ module Carbon
   end
 
   def self.env
-    @@env = Environment.new(ENV["CARBON_ENV"])
+    @@env = Environment.new(ENV["CARBON_ENV"]? || "development")
   end
 end
