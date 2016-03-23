@@ -92,10 +92,10 @@ module CarbonDispatch
         @cookies[name]?
       end
 
-      def set(name : String, value : String, path = "/" : String,
-              expires = nil : Time?, domain = nil : String?,
-              secure = false : Bool, http_only = false : Bool,
-              extension = nil : String?)
+      def set(name : String, value : String, path : String = "/",
+              expires : Time? = nil, domain : String? = nil,
+              secure : Bool = false, http_only : Bool = false,
+              extension : String? = nil)
         if @cookies[name]? != value || expires
           @cookies[name] = value
           @set_cookies[name] = HTTP::Cookie.new(name, value, path, expires, domain, secure, http_only, extension)
@@ -103,7 +103,7 @@ module CarbonDispatch
         end
       end
 
-      def delete(name, path = "/" : String, domain = nil : String?)
+      def delete(name : String, path = "/", domain : String? = nil)
         return unless @cookies.has_key?(name)
 
         value = @cookies.delete(name)
@@ -185,7 +185,7 @@ module CarbonDispatch
         set(name, value)
       end
 
-      def set(name : String, value : String, path = "/" : String, domain = nil : String?, secure = false : Bool, http_only = false : Bool, extension = nil : String?)
+      def set(name : String, value : String, path : String = "/", domain : String? = nil, secure : Bool = false, http_only : Bool = false, extension : String? = nil)
         cookie = HTTP::Cookie.new(name, value, path, 20.years.from_now, domain, secure, http_only, extension)
         @parent_jar[name] = cookie
       end
@@ -217,7 +217,7 @@ module CarbonDispatch
         end
       end
 
-      def set(name : String, value : String, path = "/" : String, expires = nil : Time?, domain = nil : String?, secure = false : Bool, http_only = false : Bool, extension = nil : String?)
+      def set(name : String, value : String, path : String = "/", expires : Time? = nil, domain : String? = nil, secure : Bool = false, http_only : Bool = false, extension : String? = nil)
         cookie = HTTP::Cookie.new(name, value, path, expires, domain, secure, http_only, extension)
 
         cookie.value = @encryptor.encrypt_and_sign(serialize(name, {"value": cookie.value}))

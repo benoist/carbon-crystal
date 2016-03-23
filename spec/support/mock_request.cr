@@ -6,7 +6,7 @@ class MockRequest
     HTTP::Request.new("GET", path, headers)
   end
 
-  def get(path : String, headers = Hash(String, String | Array(String)).new : Hash(String, String | Array(String)))
+  def get(path : String, headers : Hash(String, String | Array(String)) = Hash(String, String | Array(String)).new)
     http_headers = HTTP::Headers.new
 
     headers.each do |key, value|

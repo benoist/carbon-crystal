@@ -8,7 +8,7 @@ module CarbonController
   end
 
   module Redirect
-    def redirect_to(options = Hash(Symbol, Symbol | String).new, response_status = Hash(Symbol, Symbol).new : Hash(Symbol, Symbol))
+    def redirect_to(options = Hash(Symbol, Symbol | String).new, response_status : Hash(Symbol, Symbol) = Hash(Symbol, Symbol).new)
       raise CarbonControllerError.new("Cannot redirect to nil!") if options.nil?
       raise CarbonControllerError.new("Cannot redirect to a parameter hash!") if options.is_a?(HTTP::Params)
 
