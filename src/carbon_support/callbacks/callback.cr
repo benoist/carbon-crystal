@@ -59,7 +59,7 @@ module CarbonSupport::Callbacks
         sequence.around(self)
       end
 
-      def call(env : Environment, block : ->)
+      def call(env : Environment, block : -> _)
         if !env.halted
           @block.call(block)
         end

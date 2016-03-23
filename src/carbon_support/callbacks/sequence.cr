@@ -1,5 +1,5 @@
 class CarbonSupport::Callbacks::CallbackSequence
-  def initialize(@block : Environment ->)
+  def initialize(@block : Environment -> _)
     @before = [] of Callback::Before
     @after = [] of Callback::After
   end

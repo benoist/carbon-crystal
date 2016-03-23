@@ -52,7 +52,7 @@ module CarbonSupport::Callbacks
     end
   end
 
-  def run_callbacks(name, &block : -> Object)
+  def run_callbacks(name, &block : -> _)
     chain = load_callbacks[name.to_s]
     runner = chain.compile
     e = Environment.new(self, false, nil, &block)

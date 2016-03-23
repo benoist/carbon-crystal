@@ -27,7 +27,7 @@ module CarbonView
         content_tag_string(name, content_or_options_with_block, options, escape)
       end
 
-      def content_tag(name, content_or_options_with_block = nil, options = nil, escape = true, &block : -> Object)
+      def content_tag(name, content_or_options_with_block = nil, options = nil, escape = true, &block : -> _)
         options = content_or_options_with_block if content_or_options_with_block.is_a?(Hash)
         content_tag_string(name, capture(&block), options, escape)
       end

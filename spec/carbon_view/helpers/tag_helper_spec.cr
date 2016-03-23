@@ -20,7 +20,7 @@ module CarbonViewTest
     TestView.new.content_tag(*args)
   end
 
-  def self.content_tag(*args, &block : -> Object)
+  def self.content_tag(*args, &block : -> _)
     TestView.new.content_tag(*args, &block)
   end
 
