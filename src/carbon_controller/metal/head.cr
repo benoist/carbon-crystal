@@ -1,7 +1,7 @@
 module CarbonController
   module Head
     def head(status, location : String? = nil, content_type : String? = nil)
-      response.status = status
+      response.status_code = status
       response.location = location if location
       response.content_type = content_type if content_type
 
