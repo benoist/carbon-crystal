@@ -6,7 +6,7 @@ module CarbonController
       response.headers["Content-Type"] = content_type if content_type
 
       if include_content?(status)
-        response.content_type = content_type # || (Mime[formats.first] if formats)
+        response.headers["Content-Type"] = content_type if content_type # || (Mime[formats.first] if formats)
       else
         response.headers.delete("Content-Type")
         response.headers.delete("Content-Length")
