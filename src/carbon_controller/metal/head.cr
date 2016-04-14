@@ -3,7 +3,7 @@ module CarbonController
     def head(status, location : String? = nil, content_type : String? = nil)
       response.status_code = status
       response.location = location if location
-      response.content_type = content_type if content_type
+      response.headers["Content-Type"] = content_type if content_type
 
       if include_content?(status)
         response.content_type = content_type # || (Mime[formats.first] if formats)
