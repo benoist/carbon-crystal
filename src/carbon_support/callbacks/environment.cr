@@ -1,7 +1,7 @@
 class CarbonSupport::Callbacks::Environment
   property :target, :halted, :value, :run_block
+  alias ValueType = (String | Bool | Nil)
+  def initialize(@target : CarbonSupport::Callbacks, @halted : Bool, @value : ValueType, &@run_block : -> String)
 
-  def initialize(@target, @halted, @value, &block : -> _)
-    @run_block = block
   end
 end

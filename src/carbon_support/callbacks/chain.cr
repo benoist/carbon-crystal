@@ -8,7 +8,7 @@ class CarbonSupport::Callbacks::CallbackChain
 
     getter :terminator, :if, :unless, :skip_after_callbacks_if_terminated
 
-    def initialize(terminator = nil, @if = nil, @unless = nil, @skip_after_callbacks_if_terminated = false)
+    def initialize(terminator = nil, @skip_after_callbacks_if_terminated = false)
       if terminator
         @terminator = terminator
       else
@@ -19,7 +19,9 @@ class CarbonSupport::Callbacks::CallbackChain
 
   getter :name, :options
 
-  def initialize(@name, @options = Options.new)
+  @callbacks : CarbonSupport::Callbacks::CallbackSequence?
+
+  def initialize(@name : String, @options = Options.new)
     @chain = [] of Callback
   end
 

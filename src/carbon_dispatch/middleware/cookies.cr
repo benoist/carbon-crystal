@@ -23,6 +23,8 @@ module CarbonDispatch
     end
 
     module ChainedCookieJars
+      @options : Hash(String, String)?
+
       def permanent
         @permanent ||= PermanentCookieJar.new(self, @key_generator, @options)
       end
@@ -62,7 +64,7 @@ module CarbonDispatch
       property :host
       property :secure
 
-      def initialize(@key_generator, @host = nil, @secure = nil)
+      def initialize(@key_generator : CarbonSupport::CachingKeyGenerator, @host : String? = nil, @secure : Bool? = nil)
         @cookies = {} of String => String
         @set_cookies = {} of String => HTTP::Cookie
         @delete_cookies = {} of String => HTTP::Cookie
@@ -167,7 +169,7 @@ module CarbonDispatch
     class PermanentCookieJar # :nodoc:
       include ChainedCookieJars
 
-      def initialize(parent_jar : CookieJar, key_generator, options = {} of String => String)
+      def initialize(parent_jar : CookieJar, key_generator : CarbonSupport::CachingKeyGenerator, options = {} of String => String)
         @parent_jar = parent_jar
         @key_generator = key_generator
         @options = options
@@ -195,7 +197,7 @@ module CarbonDispatch
       include ChainedCookieJars
       include SerializedCookieJars
 
-      def initialize(parent_jar, key_generator, options = {} of String => String)
+      def initialize(parent_jar : CookieJar, key_generator : CarbonSupport::CachingKeyGenerator, options = {} of String => String)
         @parent_jar = parent_jar
         @options = options
         secret = key_generator.generate_key("encrypted_cookie_salt")

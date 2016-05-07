@@ -2,7 +2,7 @@ require "openssl/pkcs5"
 
 module CarbonSupport
   class KeyGenerator
-    def initialize(@secret, @iterations = 2**16)
+    def initialize(@secret : String, @iterations = 65536)
     end
 
     def generate_key(salt, key_size = 64)
@@ -11,7 +11,7 @@ module CarbonSupport
   end
 
   class CachingKeyGenerator
-    def initialize(@key_generator)
+    def initialize(@key_generator : KeyGenerator)
       @cache_keys = {} of String => Slice(UInt8)
     end
 

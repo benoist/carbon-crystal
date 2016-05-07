@@ -12,7 +12,7 @@ module CarbonDispatch
 
     getter controller, action, methods, pattern
 
-    def initialize(@controller, @action, @methods : Array(String), path, @block)
+    def initialize(@controller : String, @action : String, @methods : Array(String), path : String, @block : CarbonDispatch::Request, CarbonDispatch::Response -> Nil)
       @params = [] of String
       lparen = path.split(/(\()/)
       rparen = lparen.flat_map { |word| word.split(/(\))/) }

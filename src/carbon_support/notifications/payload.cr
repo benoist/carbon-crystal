@@ -1,11 +1,12 @@
 module CarbonSupport
   module Notifications
     class Payload
-      property :exception
-      property :message
+      property exception : Array(String?)?
+      property message : String?
 
       macro define_property(name)
         class {{@type}}
+          @{{name.id}} : String?
           def {{name.id}}
             @{{name.id}}
           end

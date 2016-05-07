@@ -8,7 +8,7 @@ class CarbonDispatch::Request
   delegate :headers, @request
   delegate :body, @request
 
-  def initialize(@request)
+  def initialize(@request : HTTP::Request)
     @path_params = Hash(String, String?).new
   end
 

@@ -6,7 +6,7 @@ module CarbonSupport
     class InvalidMessage < Exception
     end
 
-    def initialize(@secret, @cipher = "aes-256-cbc", @digest = :sha1, @sign_secret = nil)
+    def initialize(@secret : Slice(UInt8), @cipher = "aes-256-cbc", @digest = :sha1, @sign_secret : Slice(UInt8)? = nil)
       @verifier = MessageVerifier.new(@sign_secret || @secret, digest: @digest)
     end
 

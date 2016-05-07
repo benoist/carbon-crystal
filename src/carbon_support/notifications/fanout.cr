@@ -72,14 +72,14 @@ module CarbonSupport
         end
 
         class Evented # :nodoc:
+          @@timestack : Hash(Fiber, Array(Time))?
           def self.timestack
             @@timestack ||= Hash(Fiber, Array(Time)).new { |h, k| h[k] = [] of Time }
           end
 
-          def initialize(pattern, delegate)
+          def initialize(@pattern : String, @delegate : CarbonSupport::Subscriber)
             @pattern = pattern
-            @delegate = delegate
-            @can_publish = delegate.responds_to?(:publish)
+            @can_publish = @delegate.responds_to?(:publish)
           end
 
           def publish(name, started, finish, id, payload)
@@ -107,6 +107,8 @@ module CarbonSupport
         end
 
         class Timed < Evented
+          @@timestack : Hash(Fiber, Array(Time))?
+
           def publish(name, started, finish, id, payload)
             @delegate.call CarbonSupport::Notifications::Event.new(name, started, Time.now, id, payload)
           end

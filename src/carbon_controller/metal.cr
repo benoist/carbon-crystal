@@ -8,12 +8,9 @@ module CarbonController
       {{@type}}.new({{request}}, {{response}}).dispatch(:{{name.id}}, proc)
     end
 
-    def initialize(request, response)
+    def initialize(@_request : CarbonDispatch::Request, @_response : CarbonDispatch::Response)
       @_headers = {"Content-Type" => "text/html"}
       @_status = 200
-      @_request = request
-      @_response = response
-      @_routes = nil
       super()
     end
 

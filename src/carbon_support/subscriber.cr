@@ -2,7 +2,7 @@ module CarbonSupport
   class Subscriber
     macro attach_to(namespace, subscriber = {{@type}}.new, notifier = CarbonSupport::Notifications)
       @@namespace  = {{namespace}}
-      @@subscriber = {{subscriber}}
+      @@subscriber : CarbonSupport::Subscriber = {{subscriber}}
       @@notifier   = {{notifier}}
 
       {% for event in @type.methods %}
@@ -30,13 +30,19 @@ module CarbonSupport
         patterns = @@subscriber.patterns.not_nil!
         unless patterns.includes?(pattern)
           patterns << pattern
-          @@subscriber.callers[pattern] = ->(e : CarbonSupport::Notifications::Event) { @@subscriber.{{event}}(e) }
+          @@subscriber.callers[pattern] = ->(e : CarbonSupport::Notifications::Event) do
+            subscriber = @@subscriber
+            subscriber.{{event}}(e) if subscriber.responds_to?(:{{event.id}})
+          end
           @@notifier.subscribe(pattern, @@subscriber)
         end
       end
     end
 
     getter :patterns # :nodoc:
+
+    @queue_key : String?
+    @patterns : Array(String)?
 
 
     def initialize
@@ -62,7 +68,7 @@ module CarbonSupport
     def finish(name, id, payload)
       finished = Time.now
       event = event_stack.pop
-      event.end = finished
+      event.finish = finished
       event.payload = payload
 
       callers[name].call(event) if callers.has_key?(name)

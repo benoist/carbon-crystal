@@ -3,20 +3,19 @@ module CarbonSupport
     class Event
       property :name
       property :start
-      property :end
+      property :finish
       property :transaction_id
       property :children
       property :payload
       property :object
 
-      def initialize(name : String, start : Time, ending : Time, transaction_id : String, payload : Payload)
+      def initialize(name : String, start : Time, finish : Time, transaction_id : String, payload : Payload)
         @name = name
         @payload = payload
         @start = start
         @transaction_id = transaction_id
-        @end = ending
+        @finish = finish
         @children = [] of Event
-        @duration = nil
       end
 
       def duration

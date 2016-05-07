@@ -10,7 +10,7 @@ module CarbonSupport::Callbacks
     end
 
     class Before < Callback
-      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
+      def initialize(@name : String, @block : (( -> Void) -> Bool), @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
         @kind = :before
       end
 
@@ -19,7 +19,7 @@ module CarbonSupport::Callbacks
       end
 
       def call(env : Environment)
-        terminator = @chain_options.terminator
+        terminator = @chain_options.terminator.not_nil!
         target = env.target
 
         if !env.halted
@@ -32,12 +32,12 @@ module CarbonSupport::Callbacks
     end
 
     class After < Callback
-      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
+      def initialize(@name : String, @block : (( -> Void) -> Bool), @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
         @kind = :after
       end
 
       def call(env : Environment)
-        terminator = @chain_options.terminator
+        terminator = @chain_options.terminator.not_nil!
         if !env.halted || !@chain_options.skip_after_callbacks_if_terminated
           result = @block.call ->{}
           env.halted = terminator.terminate?(env.target, result)
@@ -51,7 +51,7 @@ module CarbonSupport::Callbacks
     end
 
     class Around < Callback
-      def initialize(@name, @block, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
+      def initialize(@name : String, @block : ( -> Void) -> Bool, @callback_options : Callback::Options, @chain_options : CallbackChain::Options)
         @kind = :after
       end
 

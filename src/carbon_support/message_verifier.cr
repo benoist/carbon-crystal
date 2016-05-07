@@ -7,14 +7,14 @@ module CarbonSupport
     class InvalidSignature < Exception
     end
 
-    def initialize(@secret, @digest = :sha1)
+    def initialize(@secret : Slice(UInt8), @digest = :sha1)
     end
 
     def valid_message?(signed_message)
       splitted = signed_message.to_s.split("--", 2)
       return if splitted.size < 2
       data, digest = splitted
-      data.size > 0 && digest.size > 0 && Crypto::Subtle.constant_time_compare(digest.bytes, generate_digest(data).bytes) == 1
+      data.size > 0 && digest.size > 0 && Crypto::Subtle.constant_time_compare(digest, generate_digest(data)) == 1
     end
 
     def verified(signed_message : String)

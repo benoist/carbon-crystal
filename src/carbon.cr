@@ -1,6 +1,6 @@
 module Carbon
   struct Environment
-    def initialize(@env)
+    def initialize(@env : String)
     end
 
     {% for env in ["development", "test", "production"] %}
@@ -13,6 +13,8 @@ module Carbon
       @env.to_s(io)
     end
   end
+
+  @@logger : Logger?
 
   def self.application=(app)
     @@application = app

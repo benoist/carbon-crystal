@@ -16,6 +16,8 @@ module CarbonSupport
     CYAN    = "\e[36m"
     WHITE   = "\e[37m"
 
+    @@logger : Logger?
+
     def self.logger
       @@logger ||= Carbon.logger
     end

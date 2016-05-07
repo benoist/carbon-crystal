@@ -1,6 +1,7 @@
 module CarbonDispatch
   class BodyProxy
-    getter :body
+    getter body : String
+    getter! block : Proc(String)
 
     def initialize(@body)
     end

@@ -1,11 +1,10 @@
 module CarbonSupport
   module Notifications
     class Instrumenter
-      getter :id
+      getter id : String
 
-      def initialize(notifier)
+      def initialize(@notifier : Fanout)
         @id = unique_id
-        @notifier = notifier
       end
 
       # Instrument the given block by measuring the time taken to execute it
